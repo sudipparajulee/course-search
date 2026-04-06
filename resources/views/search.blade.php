@@ -741,7 +741,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderEmptyState() {
-        const tiles = getTileOptions();
+        let tiles = getTileOptions();
+
+
 
         return `
             <div class="space-y-8">
@@ -750,18 +752,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 </p>
 
                 ${tiles.length ? `
-                    <div class="grid gap-5 lg:grid-cols-2">
+                    <div class="grid gap-5 lg:grid-cols-3">
                         ${tiles.map((tile) => `
                             <button
                                 type="button"
                                 data-fos-tile="${escapeHtml(tile.value)}"
                                 class="flex items-center gap-3 rounded-xl border border-transparent bg-white px-3 py-3 text-left shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#2ca5b8]"
                             >
-                                <span class="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#1a3a5c] text-[#2ca5b8]">
-                                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                        <path d="M9.3 5.3a1 1 0 0 0 0 1.4L14.6 12l-5.3 5.3a1 1 0 1 0 1.4 1.4l6-6a1 1 0 0 0 0-1.4l-6-6a1 1 0 0 0-1.4 0z"></path>
-                                    </svg>
-                                </span>
+
                                 <span class="text-[0.82rem] font-semibold text-slate-700">${escapeHtml(tile.label)}</span>
                             </button>
                         `).join('')}
