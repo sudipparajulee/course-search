@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --color-primary:    #1a3a5c; /* deep navy */
+    --color-secondary:  #2ca5b8; /* teal */
+    --color-tertiary:   #1e6fa0; /* mid blue */
+    --color-primary-light:   #e8f3f8;
+    --color-secondary-light: #e0f7fa;
+    --color-tertiary-light:  #dbeeff;
+}
+
+/* Scrollbar */
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* Smooth scroll */
+html { scroll-behavior: smooth; }
+
+/* Animate ping */
+@keyframes ping { 75%,100%{transform:scale(2);opacity:0} }
+.animate-ping { animation: ping 1s cubic-bezier(0,0,0.2,1) infinite; }
+
+/* Focus ring using brand teal */
+input:focus, select:focus, textarea:focus, button:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 2px;
+}
+
