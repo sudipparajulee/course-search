@@ -740,7 +740,21 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderEmptyState() {
         let tiles = getTileOptions();
 
-
+        // Special message for VET courses (not yet available)
+        if (state.searchType === 'vet') {
+            return `
+                <div class="space-y-6">
+                    <div class="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center shadow-sm">
+                        <svg class="mx-auto mb-4 h-12 w-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 8h.01M11 12h1v4h1"></path>
+                        </svg>
+                        <p class="text-lg font-semibold text-amber-900 mb-2">No Courses Found</p>
+                        <p class="text-sm text-amber-700">The data for VET courses is not available.</p>
+                    </div>
+                </div>
+            `;
+        }
 
         return `
             <div class="space-y-8">
@@ -761,7 +775,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             </button>
                         `).join('')}
                     </div>
-                ` : spinnerMarkup('Loading fields of study...')}
+                ` : (state.loadingFilters ? spinnerMarkup('Loading fields of study...') : emptyNoticeMarkup('No fields of study available.'))}
             </div>
         `;
     }
@@ -1052,7 +1066,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = state.results?.results || [];
 
         if (!results.length) {
-            content.innerHTML = emptyNoticeMarkup('No courses found matching your search and filters.');
+            // Special message for VET courses
+            if (state.searchType === 'vet') {
+                content.innerHTML = `
+                    <div class="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center shadow-sm">
+                        <svg class="mx-auto mb-4 h-12 w-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 8h.01M11 12h1v4h1"></path>
+                        </svg>
+                        <p class="text-lg font-semibold text-amber-900 mb-2">No Results Found</p>
+                        <p class="text-sm text-amber-700">No courses match your search criteria. Please check back later or select a different course type.</p>
+                    </div>
+                `;
+            } else {
+                content.innerHTML = emptyNoticeMarkup('No courses found matching your search and filters.');
+            }
             return;
         }
 

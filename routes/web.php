@@ -90,6 +90,11 @@ $courseSearchTypes = [
         'page_slug' => 'find-a-course-international',
         'heading_suffix' => 'on-campus courses',
     ],
+    'vet' => [
+        'label' => 'Vet',
+        'page_slug' => 'find-a-course-vet',
+        'heading_suffix' => 'on-campus courses',
+    ],
     // 'online' => [
     //     'label' => 'Online',
     //     'page_slug' => 'find-a-course-online',
@@ -177,7 +182,7 @@ Route::get('/search/{type}/course/{id}', function (string $type, string $id, Req
     $queryString = $request->getQueryString();
 
     return redirect('/course-search/search/'.$resolvedType.'/course/'.rawurlencode($id).($queryString ? '?'.$queryString : ''));
-})->where('type', 'undergraduate|postgraduate|international|online')->where('id', '[A-Za-z0-9_-]+');
+})->where('type', 'undergraduate|postgraduate|international|vet|online')->where('id', '[A-Za-z0-9_-]+');
 
 Route::get('/course-search/search/{type}/course/{id}', function (string $type, string $id) use ($resolveCourseSearchType, $courseSearchTypes, $courseSearchPath) {
     $resolvedType = $resolveCourseSearchType($type);
@@ -188,7 +193,7 @@ Route::get('/course-search/search/{type}/course/{id}', function (string $type, s
         'searchTypeLabel' => $courseSearchTypes[$resolvedType]['label'],
         'searchPagePath' => $courseSearchPath($resolvedType),
     ]);
-})->where('type', 'undergraduate|postgraduate|international|online')->where('id', '[A-Za-z0-9_-]+');
+})->where('type', 'undergraduate|postgraduate|international|vet|online')->where('id', '[A-Za-z0-9_-]+');
 
 Route::get('/api/course-search/details/{id}', function (string $id) use ($forwardJson) {
     return $forwardJson('https://coursehub.uac.edu.au/backend/course-search/api/details/international/course/'.rawurlencode($id));
@@ -196,6 +201,19 @@ Route::get('/api/course-search/details/{id}', function (string $id) use ($forwar
 
 Route::get('/api/course-search', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson) {
     $type = $resolveCourseSearchType($request->query('type'));
+
+    // Return empty data for 'vet' type as it's not supported by the external API yet
+    if ($type === 'vet') {
+        return response()->json([
+            'results' => [],
+            'stats' => [
+                'total' => 0,
+                'page' => 1,
+                'size' => (int) $request->query('size', 10),
+            ],
+        ]);
+    }
+
     $search = trim((string) $request->query('search', $request->query('query', '')));
     $pathway = $splitQueryValues($request, 'pathway', 'courseStageFlag');
     $status = $splitQueryValues($request, 'status');
@@ -227,6 +245,23 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
 
 Route::get('/api/course-search/filters', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson) {
     $type = $resolveCourseSearchType($request->query('type'));
+
+    // Return empty filters for 'vet' type as it's not supported by the external API yet
+    if ($type === 'vet') {
+        return response()->json([
+            'providers' => [],
+            'fieldOfStudy' => [],
+            'courseLevel' => [],
+            'feeTypes' => [],
+            'startMonths' => [],
+            'modeOfAttendance' => [],
+            'courseStatus' => [],
+            'target' => [
+                'os' => 0,
+            ],
+        ]);
+    }
+
     $search = trim((string) $request->query('search', $request->query('query', '')));
     $pathway = $splitQueryValues($request, 'pathway', 'courseStageFlag');
     $status = $splitQueryValues($request, 'status');

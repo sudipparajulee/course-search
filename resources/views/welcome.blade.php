@@ -75,6 +75,12 @@
 									'desc'   => "You have completed an undergraduate degree and are looking to pursue a higher-level qualification.",
 									'action' => '/course-search/search/find-a-course-postgraduate',
 								],
+                            'vet' => [
+                                    'label'  => 'VET',
+                                    'desc'   => "You are interested in Vocational Education and Training courses.",
+                                    'action' => '/course-search/search/find-a-course-vet',
+                                ],
+
 						];
 						@endphp
 
