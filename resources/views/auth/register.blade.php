@@ -88,7 +88,7 @@
                             </span>
                             <input id="phone" name="phone" type="tel" value="{{ old('phone') }}"
                                 class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400"
-                                placeholder="+61 400 000 000" />
+                                placeholder="+977 400 000 000" />
                         </div>
                     </div>
                     <div>
@@ -99,7 +99,7 @@
                             </span>
                             <input id="address" name="address" type="text" value="{{ old('address') }}"
                                 class="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-4 text-sm text-slate-800 outline-none transition placeholder:text-slate-400"
-                                placeholder="123 Main St, Sydney" />
+                                placeholder="Enter your address" />
                         </div>
                     </div>
                 </div>
