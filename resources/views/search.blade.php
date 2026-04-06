@@ -100,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
             icon: '<svg class="h-5 w-5 text-slate-900" viewBox="0 0 512 512" fill="currentColor" aria-hidden="true"><path d="M80 336a176 176 0 1 1 352 0 176 176 0 1 1-352 0zm167.6-94.9c3.5-7 13.4-7 16.9 0l22.3 45.4c1.4 2.7 4 4.7 7 5.1l50.1 7.3c7.7 1.1 10.8 10.5 5.2 16l-36.2 35.4c-2.2 2.2-3.3 5.2-2.8 8.3l8.6 49.9c1.3 7.6-6.7 13.5-13.6 9.9l-44.8-23.6c-2.7-1.4-6-1.4-8.7 0l-44.8 23.6c-6.9 3.6-14.9-2.3-13.6-9.9l8.6-49.9c.5-3.1-.5-6.1-2.8-8.3l-36.2-35.4c-5.6-5.5-2.5-14.9 5.2-16l50.1-7.3c3-.4 5.6-2.4 7-5.1l22.5-45.4zM24.6 0H133.9c11.2 0 21.7 5.9 27.4 15.5l68.5 114.1c-48.2 6.1-91.3 28.6-123.4 61.9L4.1 38.2C1.4 34.2 0 29.4 0 24.6 0 11 11 0 24.6 0zM487.4 0c13.6 0 24.6 11 24.6 24.6 0 4.8-1.4 9.6-4.1 13.6L405.6 191.5c-32.1-33.3-75.2-55.8-123.4-61.9L350.7 15.5C356.4 5.9 366.9 0 378.1 0h109.3z"></path></svg>',
         },
         fee: {
-            label: 'Fee type',
+            label: 'Compare course fees',
             icon: '<svg class="h-5 w-5 text-slate-900" viewBox="0 0 320 512" fill="currentColor" aria-hidden="true"><path d="M160 0c17.7 0 32 14.3 32 32v35.7c1.6.2 3.1.4 4.7.7.4.1.7.1 1.1.2l48 8.8c17.4 3.2 28.9 19.9 25.7 37.2s-19.9 28.9-37.2 25.7l-47.5-8.7c-31.3-4.6-58.9-1.5-78.3 6.2s-27.2 18.3-29 28.1c-2 10.7-.5 16.7 1.2 20.4 1.8 3.9 5.5 8.3 12.8 13.2 16.3 10.7 41.3 17.7 73.7 26.3l2.9.8c28.6 7.6 63.6 16.8 89.6 33.8 14.2 9.3 27.6 21.9 35.9 39.5 8.5 17.9 10.3 37.9 6.4 59.2-6.9 38-33.1 63.4-65.6 76.7-13.7 5.6-28.6 9.2-44.4 11V480c0 17.7-14.3 32-32 32s-32-14.3-32-32v-34.9l-1.5-.2c-24.4-3.8-64.5-14.3-91.5-26.3-16.1-7.2-23.4-26.1-16.2-42.2s26.1-23.4 42.2-16.2c20.9 9.3 55.3 18.5 75.2 21.6 31.9 4.7 58.2 2 76-5.3 16.9-6.9 24.6-16.9 26.8-28.9 1.9-10.6.4-16.7-1.3-20.4-1.9-4-5.6-8.4-13-13.3-16.4-10.7-41.5-17.7-74-26.3l-2.8-.7c-28.7-7.6-63.7-16.9-89.7-33.9-14.2-9.3-27.5-22-35.8-39.6-8.4-17.9-10.1-37.9-6.1-59.2C23.7 116 52.3 91.2 84.8 78.3c13.3-5.3 27.9-8.9 43.2-11V32c0-17.7 14.3-32 32-32z"></path></svg>',
         },
         start: {
@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.filters.inst.forEach((value) => params.append('inst', value));
         state.filters.fos.forEach((value) => params.append('fos', value));
         state.filters.level.forEach((value) => params.append('level', value));
-        state.filters.fee.forEach((value) => params.append('fee', value));
+        // state.filters.fee.forEach((value) => params.append('fee', value));
         state.filters.start.forEach((value) => params.append('start', value));
         state.filters.attendance.forEach((value) => params.append('attendance', value));
 
@@ -379,9 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return levelLabels[value] || value;
         }
 
-        if (group === 'fee') {
-            return feeLabels[value] || value;
-        }
+        // if (group === 'fee') {
+        //     return feeLabels[value] || value;
+        // }
 
         if (group === 'start') {
             return monthLabels[value] || value;
@@ -590,17 +590,17 @@ document.addEventListener('DOMContentLoaded', () => {
             }));
         }
 
-        if (key === 'fee') {
-            const counts = Object.fromEntries((filtersData.feeTypes || []).map((item) => [item.key, Number(item.count || 0)]));
-            const ignoredFees = ['DFEE', 'CSP'];
-            const values = unique([...feeOrder, ...state.filters.fee]).filter((value) => !ignoredFees.includes(value) && (counts[value] > 0 || selected.has(value)));
+        // if (key === 'fee') {
+        //     const counts = Object.fromEntries((filtersData.feeTypes || []).map((item) => [item.key, Number(item.count || 0)]));
+        //     const ignoredFees = ['DFEE', 'CSP'];
+        //     const values = unique([...feeOrder, ...state.filters.fee]).filter((value) => !ignoredFees.includes(value) && (counts[value] > 0 || selected.has(value)));
 
-            return values.map((value) => ({
-                value,
-                label: feeLabels[value] || value,
-                count: counts[value] || 0,
-            }));
-        }
+        //     return values.map((value) => ({
+        //         value,
+        //         label: feeLabels[value] || value,
+        //         count: counts[value] || 0,
+        //     }));
+        // }
 
         if (key === 'start') {
             const counts = Object.fromEntries((filtersData.startMonths || []).map((item) => [item.key, Number(item.count || 0)]));
@@ -718,10 +718,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${renderAccordion('level')}
                     ${renderAccordion('fee')}
                     ${renderAccordion('start')}
-                    ${renderAccordion('attendance')}
                     ${renderToggleRow('pathway', state.filters.pathway)}
-                    ${renderToggleRow('status', state.filters.status)}
-                    ${renderToggleRow('content', state.filters.content)}
                 </div>
 
                 <div class="rounded-2xl border border-[#bfe2e5]/50 bg-[#f0f9fa] p-4">
