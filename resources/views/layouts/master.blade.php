@@ -6,7 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name', 'StudyAide') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:400,500,600,700,800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=poppins:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
         :root {
@@ -14,7 +14,7 @@
             --color-secondary: #2ca5b8;
             --color-tertiary:  #1e6fa0;
         }
-        body { font-family: 'Inter', sans-serif; }
+        body { font-family: 'Poppins', sans-serif; }
     </style>
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
 </head>
@@ -55,7 +55,7 @@
                     </svg>
                     All courses
                 </a>
-                
+
                 @auth
                     <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : url('/') }}" class="flex items-center gap-2.5 rounded-full border border-slate-200 bg-white p-1 pr-4 shadow-sm transition hover:shadow-md">
                         @if(auth()->user()->photo)
@@ -67,7 +67,7 @@
                         @endif
                         <span class="text-[13px] font-bold text-[#1a3a5c]">Hi, {{ explode(' ', auth()->user()->name ?? 'User')[0] }}</span>
                     </a>
-                    
+
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="inline-flex items-center justify-center rounded-full bg-slate-100 p-2 text-slate-500 transition hover:bg-red-50 hover:text-red-500" title="Log out">
@@ -112,7 +112,7 @@
                     </svg>
                 </button>
             </div>
-            
+
             <div class="mt-8 flow-root">
                 <div class="-my-6 divide-y divide-slate-100">
                     <div class="space-y-2 py-6">
@@ -126,14 +126,14 @@
                         @endforeach
                     </div>
                     <div class="py-6 space-y-4">
-                        <a href="{{ url('/course-search/search/find-a-course-international') }}" 
+                        <a href="{{ url('/course-search/search/find-a-course-international') }}"
                            class="-mx-3 flex items-center justify-center gap-2 rounded-xl px-3 py-3 text-base font-semibold border-2 border-[#1a3a5c] text-[#1a3a5c] transition hover:bg-[#1a3a5c] hover:text-white group">
                             <svg class="h-5 w-5 text-[#2ca5b8] group-hover:text-white transition" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="11" cy="11" r="6.75"/><path d="m16 16 5 5"/>
                             </svg>
                             All courses
                         </a>
-                        
+
                         @auth
                             <a href="{{ auth()->user()->isAdmin() ? route('admin.dashboard') : url('/') }}" class="-mx-3 flex items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold leading-7 text-slate-800 transition hover:bg-slate-50">
                                 @if(auth()->user()->photo)
@@ -145,7 +145,7 @@
                                 @endif
                                 <span>Hi, {{ explode(' ', auth()->user()->name ?? 'User')[0] }}</span>
                             </a>
-                            
+
                             <form method="POST" action="{{ route('logout') }}" class="-mx-3">
                                 @csrf
                                 <button type="submit" class="flex w-full items-center gap-3 rounded-xl px-3 py-3 text-base font-semibold leading-7 text-red-600 transition hover:bg-red-50">
@@ -154,7 +154,7 @@
                                 </button>
                             </form>
                         @else
-                            <a href="{{ route('login') }}" 
+                            <a href="{{ route('login') }}"
                                class="-mx-3 flex items-center justify-center gap-2 rounded-xl bg-[#1a3a5c] px-3 py-3 text-base font-semibold text-white shadow-md transition hover:bg-[#2ca5b8] active:scale-[0.98]">
                                 Apply / log in
                             </a>
@@ -189,7 +189,7 @@
                 backdrop.classList.add('opacity-0');
                 panel.classList.remove('translate-x-0');
                 panel.classList.add('translate-x-full');
-                
+
                 setTimeout(() => {
                     sidebar.classList.add('hidden');
                     document.body.style.overflow = '';
