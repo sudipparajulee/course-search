@@ -338,6 +338,93 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+    function renderVetDetailsPage(course) {
+        const title = normalizeText(course.title || course.courseName || '');
+
+        document.title = `${title} | Course detail`;
+
+        app.innerHTML = `
+            <div class="space-y-8">
+                <nav class="flex flex-wrap items-center gap-3 text-[1rem] font-medium text-slate-700">
+                    <a href="${endpoints.home}" class="underline underline-offset-4 hover:text-slate-900">Home</a>
+                    <span>&gt;</span>
+                    <a href="${endpoints.search}" class="underline underline-offset-4 hover:text-slate-900">${escapeHtml(currentSearchTypeLabel)} courses</a>
+                </nav>
+
+                <section class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                    <div>
+                        <h1 class="text-[2rem] font-semibold leading-tight text-slate-900 sm:text-[2.35rem]">${escapeHtml(title)}</h1>
+                    </div>
+
+                    <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="text-[0.8rem] font-bold uppercase tracking-widest text-slate-400">Duration</div>
+                            <div class="mt-2 text-[1.1rem] font-semibold text-slate-800">${escapeHtml(course.duration || 'N/A')}</div>
+                        </div>
+
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="text-[0.8rem] font-bold uppercase tracking-widest text-slate-400">Enrollment Fee</div>
+                            <div class="mt-2 text-[1.1rem] font-semibold text-slate-800">${escapeHtml(course.enrollmentFee || 'N/A')}</div>
+                        </div>
+
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="text-[0.8rem] font-bold uppercase tracking-widest text-slate-400">Material Fee</div>
+                            <div class="mt-2 text-[1.1rem] font-semibold text-slate-800">${escapeHtml(course.materialFee || 'N/A')}</div>
+                        </div>
+
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="text-[0.8rem] font-bold uppercase tracking-widest text-slate-400">Tuition Fee</div>
+                            <div class="mt-2 text-[1.1rem] font-semibold text-slate-800">${escapeHtml(course.tuitionFee || 'N/A')}</div>
+                        </div>
+
+                        <div class="rounded-xl border border-slate-200 bg-slate-50 p-5">
+                            <div class="text-[0.8rem] font-bold uppercase tracking-widest text-slate-400">Promo Fee</div>
+                            <div class="mt-2 text-[1.1rem] font-semibold text-slate-800">${escapeHtml(course.promoFee || 'N/A')}</div>
+                        </div>
+                    </div>
+
+                    ${course.notes ? `
+                        <div class="mt-6 rounded-2xl border border-[#bfe2e5]/50 bg-[#f0f9fa] p-4">
+                            <div class='flex items-start gap-3'>
+                                <svg class='h-4 w-4 mt-0.5 shrink-0 text-[#1a3a5c]' viewBox='0 0 24 24' fill='none' stroke="currentColor" stroke-width="2.5"><circle cx='12' cy='12' r='9'/><path d='M12 8h.01M11 12h1v4h1'/></svg>
+                                <div class="text-[0.8rem] leading-relaxed text-[#3b5b71]">
+                                    <p class="font-semibold mb-1">${escapeHtml(title)}</p>
+                                    <p><span class="font-semibold">Course Notes:</span> ${escapeHtml(course.notes)}</p>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </section>
+
+                <div class="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+                    <aside class="self-start lg:sticky lg:top-6">
+                        <div class="space-y-5 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
+                            <a
+                                href="/apply"
+                                class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1a3a5c] px-5 py-4 text-[1rem] font-semibold text-white shadow-sm transition hover:bg-[#2ca5b8]"
+                            >
+                                <svg class='h-5 w-5' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 20h9'/><path d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'/></svg>
+                                Apply now
+                            </a>
+
+                            <a
+                                href="${endpoints.search}"
+                                class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-5 py-4 text-[1rem] font-semibold text-[#1a3a5c] transition hover:bg-slate-100"
+                            >
+                                <svg class='h-4 w-4 text-[#2ca5b8]' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M19 12H5'/><path d='m12 5-7 7 7 7'/></svg>
+                                Back to ${escapeHtml(currentSearchTypeLabel)} courses
+                            </a>
+                        </div>
+                    </aside>
+
+                    <div class="space-y-8">
+                        <!-- No additional content sections for VET courses -->
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
     function renderDetailsPage(payload, campusMap) {
         const course = payload.course || {};
         const content = payload.contentJson || {};
@@ -348,6 +435,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const providerId = course.providerId || courseDoc.providerId || '';
         const logo = getLogoUrl(providerId, course.providerLogo);
         const feeNote = course.feeNote || '';
+
+        // Custom rendering for VET courses
+        if (course.isVet) {
+            renderVetDetailsPage(course);
+            return;
+        }
 
         document.title = `${title} | ${providerName || 'Course detail'}`;
 

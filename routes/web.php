@@ -202,14 +202,103 @@ Route::get('/api/course-search/details/{id}', function (string $id) use ($forwar
 Route::get('/api/course-search', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson) {
     $type = $resolveCourseSearchType($request->query('type'));
 
-    // Return empty data for 'vet' type as it's not supported by the external API yet
+    // Return vet courses from CSV file for 'vet' type
     if ($type === 'vet') {
+        $csvPath = public_path('vet.csv');
+        $courses = [];
+        
+        // Function to determine category from course name
+        $getCategory = function($courseName) {
+            $name = strtolower($courseName);
+            
+            if (strpos($name, 'certificate') !== false) {
+                return 'Certificate';
+            } elseif (strpos($name, 'advanced diploma') !== false) {
+                return 'Advanced Diploma';
+            } elseif (strpos($name, 'graduate diploma') !== false) {
+                return 'Graduate Diploma';
+            } elseif (strpos($name, 'diploma') !== false) {
+                return 'Diploma';
+            } elseif (strpos($name, 'english') !== false) {
+                return 'English';
+            } else {
+                return 'Other';
+            }
+        };
+        
+        if (file_exists($csvPath)) {
+            $csvFile = fopen($csvPath, 'r');
+            fgets($csvFile); // Skip institution name line
+            fgetcsv($csvFile); // Skip header row
+            
+            $courseIndex = 0;
+            
+            while (($row = fgetcsv($csvFile)) !== false) {
+                if (!empty($row[0])) { // Course name column
+                    $courseIndex++;
+                    $courseName = $row[0];
+                    $duration = $row[1] ?? '';
+                    $courseCode = 'VET' . str_pad($courseIndex, 4, '0', STR_PAD_LEFT);
+                    $category = $getCategory($courseName);
+                    
+                    $courses[] = [
+                        'id' => md5($courseName),
+                        'title' => $courseName,
+                        'courseName' => $courseName,
+                        'courseCode' => $courseCode,
+                        'duration' => $duration,
+                        'enrollmentFee' => $row[2] ?? '',
+                        'materialFee' => $row[3] ?? '',
+                        'tuitionFee' => $row[4] ?? '',
+                        'promoFee' => $row[5] ?? '',
+                        'notes' => $row[6] ?? '',
+                        'courseUrl' => md5($courseName),
+                        'status' => 'O', // Open
+                        'courseStatus' => 'O',
+                        'type' => 'vet',
+                        'isVet' => true, // Flag to identify vet courses for custom UI
+                        'category' => $category, // Add category based on qualification level
+                    ];
+                }
+            }
+            fclose($csvFile);
+        }
+        
+        // Filter by search query if provided
+        $search = trim((string) $request->query('search', $request->query('query', '')));
+        if ($search !== '') {
+            $courses = array_filter($courses, function($course) use ($search) {
+                return stripos($course['title'], $search) !== false || 
+                       stripos($course['courseCode'], $search) !== false;
+            });
+        }
+
+        // Filter by category (level) if provided
+        $level = $request->query('level');
+        if ($level) {
+            $levelArray = is_array($level) ? $level : [$level];
+            $courses = array_filter($courses, function($course) use ($levelArray) {
+                $categoryKey = strtolower(str_replace(' ', '_', $course['category']));
+                return in_array($categoryKey, $levelArray);
+            });
+        }
+
+        // Implement pagination
+        $page = max((int) $request->query('page', 1), 1);
+        $size = in_array((int) $request->query('size', 10), [10, 30, 50, 100, 500], true) 
+            ? (int) $request->query('size', 10) 
+            : 10;
+        
+        $total = count($courses);
+        $offset = ($page - 1) * $size;
+        $paginatedCourses = array_slice(array_values($courses), $offset, $size);
+        
         return response()->json([
-            'results' => [],
+            'results' => $paginatedCourses,
             'stats' => [
-                'total' => 0,
-                'page' => 1,
-                'size' => (int) $request->query('size', 10),
+                'total' => $total,
+                'page' => $page,
+                'size' => $size,
             ],
         ]);
     }
@@ -246,18 +335,71 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
 Route::get('/api/course-search/filters', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson) {
     $type = $resolveCourseSearchType($request->query('type'));
 
-    // Return empty filters for 'vet' type as it's not supported by the external API yet
+    // Return vet filters from CSV file for 'vet' type
     if ($type === 'vet') {
+        $csvPath = public_path('vet.csv');
+        $courseCount = 0;
+        $categories = [];
+        
+        // Function to determine category from course name
+        $getCategory = function($courseName) {
+            $name = strtolower($courseName);
+            
+            if (strpos($name, 'certificate') !== false) {
+                return 'Certificate';
+            } elseif (strpos($name, 'advanced diploma') !== false) {
+                return 'Advanced Diploma';
+            } elseif (strpos($name, 'graduate diploma') !== false) {
+                return 'Graduate Diploma';
+            } elseif (strpos($name, 'diploma') !== false) {
+                return 'Diploma';
+            } elseif (strpos($name, 'english') !== false) {
+                return 'English';
+            } else {
+                return 'Other';
+            }
+        };
+        
+        if (file_exists($csvPath)) {
+            $csvFile = fopen($csvPath, 'r');
+            fgets($csvFile); // Skip institution name line
+            fgetcsv($csvFile); // Skip header row
+            
+            while (($row = fgetcsv($csvFile)) !== false) {
+                if (!empty($row[0])) {
+                    $courseCount++;
+                    $category = $getCategory($row[0]);
+                    
+                    // Count courses per category
+                    if (!isset($categories[$category])) {
+                        $categories[$category] = 0;
+                    }
+                    $categories[$category]++;
+                }
+            }
+            fclose($csvFile);
+        }
+        
+        // Convert categories to filter format
+        $categoryFilters = [];
+        foreach ($categories as $category => $count) {
+            $categoryFilters[] = [
+                'key' => strtolower(str_replace(' ', '_', $category)),
+                'name' => $category,
+                'count' => $count,
+            ];
+        }
+        
         return response()->json([
             'providers' => [],
             'fieldOfStudy' => [],
-            'courseLevel' => [],
+            'courseLevel' => $categoryFilters, // Use courseLevel for qualification categories
             'feeTypes' => [],
             'startMonths' => [],
             'modeOfAttendance' => [],
             'courseStatus' => [],
             'target' => [
-                'os' => 0,
+                'os' => $courseCount,
             ],
         ]);
     }
@@ -290,8 +432,64 @@ Route::get('/api/course-search/campus', function () use ($forwardJson) {
 Route::get('/api/course-search/details/{type}/{id}', function (string $type, string $id) use ($resolveCourseSearchType, $forwardJson) {
     $resolvedType = $resolveCourseSearchType($type);
 
+    // Return vet course details from CSV file for 'vet' type
+    if ($resolvedType === 'vet') {
+        $csvPath = public_path('vet.csv');
+        
+        if (file_exists($csvPath)) {
+            $csvFile = fopen($csvPath, 'r');
+            fgets($csvFile); // Skip institution name line
+            fgetcsv($csvFile); // Skip header row
+            
+            $courseIndex = 0;
+            
+            while (($row = fgetcsv($csvFile)) !== false) {
+                if (!empty($row[0])) {
+                    $courseIndex++;
+                    $courseName = $row[0];
+                    
+                    if (md5($courseName) === $id) {
+                        fclose($csvFile);
+                        $duration = $row[1] ?? '';
+                        $courseCode = 'VET' . str_pad($courseIndex, 4, '0', STR_PAD_LEFT);
+                        
+                        return response()->json([
+                            'course' => [
+                                'id' => md5($courseName),
+                                'title' => $courseName,
+                                'courseName' => $courseName,
+                                'courseCode' => $courseCode,
+                                'duration' => $duration,
+                                'enrollmentFee' => $row[2] ?? '',
+                                'materialFee' => $row[3] ?? '',
+                                'tuitionFee' => $row[4] ?? '',
+                                'promoFee' => $row[5] ?? '',
+                                'notes' => $row[6] ?? '',
+                                'courseUrl' => md5($courseName),
+                                'status' => 'O', // Open
+                                'courseStatus' => 'O',
+                                'type' => 'vet',
+                                'isVet' => true, // Flag to identify vet courses for custom UI
+                            ],
+                            'contentJson' => [
+                                'courseTitle' => $courseName,
+                            ],
+                            'courseDoc' => [],
+                            'courseList' => [],
+                        ]);
+                    }
+                }
+            }
+            fclose($csvFile);
+        }
+        
+        return response()->json([
+            'message' => 'Course not found',
+        ], 404);
+    }
+
     return $forwardJson('https://coursehub.uac.edu.au/backend/course-search/api/details/'.$resolvedType.'/course/'.rawurlencode($id));
-})->where('type', 'undergraduate|postgraduate|international|online')->where('id', '[A-Za-z0-9_-]+');
+})->where('type', 'undergraduate|postgraduate|international|vet|online')->where('id', '[A-Za-z0-9_-]+');
 
 Route::get('/api/course-search/apply-info', function () {
     $portalUrl = '#';

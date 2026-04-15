@@ -580,6 +580,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (key === 'level') {
+            // Special handling for VET courses - use qualification categories
+            if (state.searchType === 'vet') {
+                const courseLevelData = filtersData.courseLevel || [];
+                const counts = Object.fromEntries(courseLevelData.map((item) => [item.key, Number(item.count || 0)]));
+                const values = unique([...courseLevelData.map((item) => item.key), ...state.filters.level]).filter((value) => counts[value] > 0 || selected.has(value));
+
+                const options = values.map((value) => ({
+                    value,
+                    label: courseLevelData.find((item) => item.key === value)?.name || value,
+                    count: counts[value] || 0,
+                }));
+
+                return options;
+            }
+
             const counts = Object.fromEntries((filtersData.courseLevel || []).map((item) => [item.key, Number(item.count || 0)]));
             const values = unique([...courseLevelOrder, ...state.filters.level]).filter((value) => counts[value] > 0 || selected.has(value));
 
@@ -721,14 +736,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${renderToggleRow('pathway', state.filters.pathway)}
                 </div>
 
-                <div class="rounded-2xl border border-[#bfe2e5]/50 bg-[#f0f9fa] p-4">
-                    <div class='flex items-start gap-3'>
-                        <svg class='h-4 w-4 mt-0.5 shrink-0 text-[#1a3a5c]' viewBox='0 0 24 24' fill='none' stroke="currentColor" stroke-width="2.5"><circle cx='12' cy='12' r='9'/><path d='M12 8h.01M11 12h1v4h1'/></svg>
-                        <p class="text-[0.8rem] leading-relaxed text-[#3b5b71]">
-                            Course availability and details are subject to change throughout the admissions cycle.
-                        </p>
+                ${state.searchType !== 'vet' ? `
+                    <div class="rounded-2xl border border-[#bfe2e5]/50 bg-[#f0f9fa] p-4">
+                        <div class='flex items-start gap-3'>
+                            <svg class='h-4 w-4 mt-0.5 shrink-0 text-[#1a3a5c]' viewBox='0 0 24 24' fill='none' stroke="currentColor" stroke-width="2.5"><circle cx='12' cy='12' r='9'/><path d='M12 8h.01M11 12h1v4h1'/></svg>
+                            <p class="text-[0.8rem] leading-relaxed text-[#3b5b71]">
+                                Course availability and details are subject to change throughout the admissions cycle.
+                            </p>
+                        </div>
                     </div>
-                </div>
+                ` : ''}
             </div>
         `;
     }
@@ -737,24 +754,32 @@ document.addEventListener('DOMContentLoaded', () => {
         return getOptionList('fos').sort((a, b) => a.label.localeCompare(b.label));
     }
 
+    function getVetCategoryOptions() {
+        const categories = [
+            { key: 'certificate', name: 'Certificate' },
+            { key: 'diploma', name: 'Diploma' },
+            { key: 'advanced_diploma', name: 'Advanced Diploma' },
+            { key: 'graduate_diploma', name: 'Graduate Diploma' },
+            { key: 'english', name: 'English' },
+        ];
+
+        const categoryCounts = {};
+        if (state.filtersData?.courseLevel) {
+            state.filtersData.courseLevel.forEach((cat) => {
+                categoryCounts[cat.key] = Number(cat.count || 0);
+            });
+        }
+
+        return categories.map((cat) => ({
+            value: cat.key,
+            label: cat.name,
+            count: categoryCounts[cat.key] || 0,
+        }));
+    }
+
     function renderEmptyState() {
         let tiles = getTileOptions();
-
-        // Special message for VET courses (not yet available)
-        if (state.searchType === 'vet') {
-            return `
-                <div class="space-y-6">
-                    <div class="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center shadow-sm">
-                        <svg class="mx-auto mb-4 h-12 w-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <circle cx="12" cy="12" r="9"></circle>
-                            <path d="M12 8h.01M11 12h1v4h1"></path>
-                        </svg>
-                        <p class="text-lg font-semibold text-amber-900 mb-2">No Courses Found</p>
-                        <p class="text-sm text-amber-700">The data for VET courses is not available.</p>
-                    </div>
-                </div>
-            `;
-        }
+        const vetCategories = state.searchType === 'vet' ? getVetCategoryOptions() : [];
 
         return `
             <div class="space-y-8">
@@ -762,18 +787,28 @@ document.addEventListener('DOMContentLoaded', () => {
                     Use the search bar above or select a field of study filter below.
                 </p>
 
-                ${tiles.length ? `
+                ${tiles.length || vetCategories.length ? `
                     <div class="grid gap-5 lg:grid-cols-3">
-                        ${tiles.map((tile) => `
+                        ${tiles.length ? tiles.map((tile) => `
                             <button
                                 type="button"
                                 data-fos-tile="${escapeHtml(tile.value)}"
                                 class="flex items-center gap-3 rounded-xl border border-transparent bg-white px-3 py-3 text-left shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-md hover:ring-[#2ca5b8]"
                             >
-
                                 <span class="text-[0.82rem] font-semibold text-slate-700">${escapeHtml(tile.label)}</span>
                             </button>
-                        `).join('')}
+                        `).join('') : ''}
+
+                        ${!tiles.length && vetCategories.length ? vetCategories.map((category) => `
+                            <button
+                                type="button"
+                                data-category-filter="${escapeHtml(category.value)}"
+                                class="group flex items-center justify-between gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-left shadow-sm transition hover:border-[#2ca5b8] hover:bg-[#e8f3f8]/30"
+                            >
+                                <span class="text-[0.88rem] font-semibold text-slate-700">${escapeHtml(category.label)}</span>
+                                ${category.count > 0 ? `<span class="text-[0.75rem] font-medium text-slate-400">${numberFormatter.format(category.count)}</span>` : ''}
+                            </button>
+                        `).join('') : ''}
                     </div>
                 ` : (state.loadingFilters ? spinnerMarkup('Loading fields of study...') : emptyNoticeMarkup('No fields of study available.'))}
             </div>
@@ -928,6 +963,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderResultCard(course) {
+        // Custom rendering for VET courses
+        if (course.isVet) {
+            return renderVetCourseCard(course);
+        }
+
         const logo = buildLogoUrl(course);
         const campusName = getCampusName(course);
         const duration = formatDuration(course.duration);
@@ -1022,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <div class="${providerTextClass}">${escapeHtml(course.providerName)}</div>
                         <div class="${campusRowClass}">
                             <svg class="${campusIconClass}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"></path>
+                                <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6 a2.5 2.5 0 0 1 0 5.5z"></path>
                             </svg>
                             <span>${escapeHtml(campusName)}</span>
                         </div>
@@ -1040,6 +1080,103 @@ document.addEventListener('DOMContentLoaded', () => {
                     ${rightColumnMarkup}
                 </div>
             </article>
+        `;
+    }
+
+    function renderVetCourseCard(course) {
+        const articleClass = 'group border-t-[2px] border-[#2ca5b8]/40 bg-white shadow-sm rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#1a3a5c]/5 hover:ring-1 hover:ring-[#2ca5b8]/20';
+        const compactClass = state.compact ? 'gap-4 px-4 py-5 sm:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_420px]' : 'gap-6 px-5 py-6 sm:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_420px]';
+        const categoryLabels = {
+            certificate: 'Certificate',
+            diploma: 'Diploma',
+            advanced_diploma: 'Advanced Diploma',
+            graduate_diploma: 'Graduate Diploma',
+            english: 'English',
+        };
+        const categoryLabel = categoryLabels[course.category] || course.category || 'VET';
+        const campusName = getCampusName(course);
+
+        return `
+            <article class="${articleClass}">
+                <div class="${compactClass} grid items-start gap-8">
+                    <div class="min-w-0">
+                        <a
+                            href="${buildCourseLink(course)}"
+                            class="min-w-0 text-[0.95rem] font-bold leading-snug text-[#1a3a5c] transition hover:text-[#2ca5b8] hover:underline group-hover:text-[#1e6fa0] group-hover:underline sm:text-[1.05rem]"
+                        >
+                            ${escapeHtml(course.title)}
+                        </a>
+                        <div class="mt-3 flex flex-wrap items-center gap-3 text-[0.82rem] text-slate-500">
+                            <span class="inline-flex items-center rounded-full bg-[#e8f3f8]/50 px-2.5 py-1 text-[0.75rem] font-semibold text-[#1a3a5c]">
+                                ${escapeHtml(categoryLabel)}
+                            </span>
+                        </div>
+                        <div class="mt-4 flex flex-wrap items-center gap-4 text-[0.82rem] text-slate-500">
+                            <span class="inline-flex items-center gap-2">
+                                <svg class="h-4 w-4 text-[#2ca5b8]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                    <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"></path>
+                                </svg>
+                                ${escapeHtml(campusName)}
+                            </span>
+                          
+                        </div>
+                    </div>
+
+                    <div class="grid gap-3 sm:grid-cols-2">
+                        <div class="rounded-xl bg-[#f8fbfd] p-4">
+                            <div class="text-[0.75rem] uppercase tracking-widest text-slate-400">Fees</div>
+                            <div class="mt-2 grid gap-2 text-[0.85rem] text-slate-600">
+                                <div>Enrollment: ${escapeHtml(course.enrollmentFee || 'N/A')}</div>
+                                <div>Material: ${escapeHtml(course.materialFee || 'N/A')}</div>
+                                <div>Tuition: ${escapeHtml(course.tuitionFee || 'N/A')}</div>
+                                <div>Promo: ${escapeHtml(course.promoFee || 'N/A')}</div>
+                            </div>
+                        </div>
+                        <div class="rounded-xl bg-slate-50 p-4">
+                            <div class="text-[0.75rem] uppercase tracking-widest text-slate-400">Duration</div>
+                            <div class="mt-2 text-[0.85rem] text-slate-600 font-semibold">
+                                ${escapeHtml(course.duration || 'N/A')}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        `;
+    }
+
+    function renderCategoryButtons() {
+        if (state.searchType !== 'vet' || state.filters.level.length) {
+            return '';
+        }
+
+        const vetCategories = [
+            { key: 'certificate', name: 'Certificate' },
+            { key: 'diploma', name: 'Diploma' },
+            { key: 'advanced_diploma', name: 'Advanced Diploma' },
+            { key: 'graduate_diploma', name: 'Graduate Diploma' },
+            { key: 'english', name: 'English' },
+        ];
+        
+        const categoryCounts = {};
+        if (state.filtersData?.courseLevel) {
+            state.filtersData.courseLevel.forEach((cat) => {
+                categoryCounts[cat.key] = cat.count;
+            });
+        }
+        
+        return `
+            <div class="mb-6 grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                ${vetCategories.map((cat) => `
+                    <button
+                        type="button"
+                        data-category-filter="${cat.key}"
+                        class="group flex items-center justify-between gap-3 rounded-xl border ${state.filters.level.includes(cat.key) ? 'border-[#2ca5b8] bg-[#e8f3f8]/50' : 'border-slate-200 bg-white'} px-4 py-3 text-left shadow-sm transition hover:border-[#2ca5b8] hover:bg-[#e8f3f8]/30"
+                    >
+                        <span class="text-[0.88rem] font-semibold ${state.filters.level.includes(cat.key) ? 'text-[#1a3a5c]' : 'text-slate-700'}">${escapeHtml(cat.name)}</span>
+                        ${categoryCounts[cat.key] !== undefined ? `<span class="text-[0.75rem] font-medium ${state.filters.level.includes(cat.key) ? 'text-[#2ca5b8]' : 'text-slate-400'}">${numberFormatter.format(categoryCounts[cat.key])}</span>` : ''}
+                    </button>
+                `).join('')}
+            </div>
         `;
     }
 
@@ -1066,16 +1203,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const results = state.results?.results || [];
 
         if (!results.length) {
-            // Special message for VET courses
             if (state.searchType === 'vet') {
                 content.innerHTML = `
-                    <div class="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center shadow-sm">
-                        <svg class="mx-auto mb-4 h-12 w-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <circle cx="12" cy="12" r="9"></circle>
-                            <path d="M12 8h.01M11 12h1v4h1"></path>
-                        </svg>
-                        <p class="text-lg font-semibold text-amber-900 mb-2">No Results Found</p>
-                        <p class="text-sm text-amber-700">No courses match your search criteria. Please check back later or select a different course type.</p>
+                    <div class="space-y-5">
+                        ${renderCategoryButtons()}
+                        <div class="rounded-2xl border border-amber-200 bg-amber-50 px-6 py-8 text-center shadow-sm">
+                            <svg class="mx-auto mb-4 h-12 w-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                                <circle cx="12" cy="12" r="9"></circle>
+                                <path d="M12 8h.01M11 12h1v4h1"></path>
+                            </svg>
+                            <p class="text-lg font-semibold text-amber-900 mb-2">No Results Found</p>
+                            <p class="text-sm text-amber-700">No courses match your search criteria. Please check back later or select a different course type.</p>
+                        </div>
                     </div>
                 `;
             } else {
@@ -1086,7 +1225,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         content.innerHTML = `
             <div class="space-y-5">
-                ${results.map((course) => renderResultCard(course)).join('')}
+                ${renderCategoryButtons()}
+                <div class="space-y-5">
+                    ${results.map((course) => renderResultCard(course)).join('')}
+                </div>
 
                 <div class="border-t border-slate-200 pt-6">
                     ${renderToolbarMarkup('text-[0.96rem]')}
@@ -1261,6 +1403,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (toggle) {
             toggleFlag(toggle.dataset.toggleFlag);
+            return;
+        }
+    });
+
+    // Add event handler for category filter buttons in content area
+    content.addEventListener('click', (event) => {
+        const categoryButton = event.target.closest('[data-category-filter]');
+
+        if (categoryButton) {
+            toggleArrayFilter('level', categoryButton.dataset.categoryFilter);
+            return;
+        }
+    });
+
+    content.addEventListener('change', (event) => {
+        const checkbox = event.target.closest('[data-filter-group]');
+
+        if (checkbox) {
+            toggleArrayFilter(checkbox.dataset.filterGroup, checkbox.dataset.filterValue);
+            return;
+        }
+
+        const toggle = event.target.closest('[data-toggle-flag]');
+
+        if (toggle) {
+            toggleFlag(toggle.dataset.toggleFlag);
         }
     });
 
@@ -1365,6 +1533,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     parseStateFromUrl();
     state.openAccordions = new Set();
+    
+    // Automatically open level accordion for VET courses to show categories
+    if (state.searchType === 'vet') {
+        state.openAccordions.add('level');
+    }
+    
     setSearchInput();
     renderAll();
     refresh({ updateUrl: false });
