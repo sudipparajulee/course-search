@@ -505,6 +505,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function buildLogoUrl(course) {
+        if (course.isVet) {
+            const primaryLogo = course.logoUrl || course.logoSourceUrl || '';
+            const secondaryLogo = course.logoSourceUrl || course.logoFallbackUrl || primaryLogo;
+            return {
+                primary: primaryLogo,
+                fallback: secondaryLogo,
+            };
+        }
+
         const svgLogo = `https://uac.edu.au/assets/images/Institution-logos/2025/${encodeURIComponent(course.providerId)}_h.svg`;
         const fallback = course.providerLogo ? `https://uac.edu.au${course.providerLogo}` : svgLogo;
 
@@ -547,6 +556,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const filtersData = state.filtersData || {};
         const selected = new Set(state.filters[key] || []);
 
+        const vetLevelCatalog = [
+            { key: 'certificate', name: 'Certificate' },
+            { key: 'diploma', name: 'Diploma' },
+            { key: 'advanced_diploma', name: 'Advanced Diploma' },
+            { key: 'graduate_diploma', name: 'Graduate Diploma' },
+            { key: 'english', name: 'English' },
+            { key: 'other', name: 'Other' },
+        ];
+
         if (key === 'inst') {
             const options = (filtersData.providers || []).map((item) => ({
                 value: item.key,
@@ -584,11 +602,20 @@ document.addEventListener('DOMContentLoaded', () => {
             if (state.searchType === 'vet') {
                 const courseLevelData = filtersData.courseLevel || [];
                 const counts = Object.fromEntries(courseLevelData.map((item) => [item.key, Number(item.count || 0)]));
-                const values = unique([...courseLevelData.map((item) => item.key), ...state.filters.level]).filter((value) => counts[value] > 0 || selected.has(value));
+                const allValues = unique([
+                    ...vetLevelCatalog.map((item) => item.key),
+                    ...courseLevelData.map((item) => item.key),
+                    ...state.filters.level,
+                ]);
+                const values = selected.size > 0
+                    ? allValues.filter((value) => selected.has(value))
+                    : allValues;
 
                 const options = values.map((value) => ({
                     value,
-                    label: courseLevelData.find((item) => item.key === value)?.name || value,
+                    label: vetLevelCatalog.find((item) => item.key === value)?.name
+                        || courseLevelData.find((item) => item.key === value)?.name
+                        || value,
                     count: counts[value] || 0,
                 }));
 
@@ -761,6 +788,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { key: 'advanced_diploma', name: 'Advanced Diploma' },
             { key: 'graduate_diploma', name: 'Graduate Diploma' },
             { key: 'english', name: 'English' },
+            { key: 'other', name: 'Other' },
         ];
 
         const categoryCounts = {};
@@ -1086,39 +1114,53 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderVetCourseCard(course) {
         const articleClass = 'group border-t-[2px] border-[#2ca5b8]/40 bg-white shadow-sm rounded-xl transition-all duration-200 hover:-translate-y-0.5 hover:shadow-lg hover:shadow-[#1a3a5c]/5 hover:ring-1 hover:ring-[#2ca5b8]/20';
         const compactClass = state.compact ? 'gap-4 px-4 py-5 sm:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_420px]' : 'gap-6 px-5 py-6 sm:grid-cols-[minmax(0,1fr)_360px] lg:grid-cols-[minmax(0,1fr)_420px]';
-        const categoryLabels = {
-            certificate: 'Certificate',
-            diploma: 'Diploma',
-            advanced_diploma: 'Advanced Diploma',
-            graduate_diploma: 'Graduate Diploma',
-            english: 'English',
-        };
-        const categoryLabel = categoryLabels[course.category] || course.category || 'VET';
-        const campusName = getCampusName(course);
+        const campusName = Array.isArray(course.availableCities) && course.availableCities.length
+            ? course.availableCities.join(' / ')
+            : getCampusName(course);
+        const logo = buildLogoUrl(course);
+        const logoBgClass = course.providerKey === 'mit'
+            ? 'bg-[#0f4d92]'
+            : (course.providerKey === 'igi' ? 'bg-black' : 'bg-white');
 
         return `
             <article class="${articleClass}">
                 <div class="${compactClass} grid items-start gap-8">
                     <div class="min-w-0">
-                        <a
-                            href="${buildCourseLink(course)}"
-                            class="min-w-0 text-[0.95rem] font-bold leading-snug text-[#1a3a5c] transition hover:text-[#2ca5b8] hover:underline group-hover:text-[#1e6fa0] group-hover:underline sm:text-[1.05rem]"
-                        >
-                            ${escapeHtml(course.title)}
-                        </a>
-                        <div class="mt-3 flex flex-wrap items-center gap-3 text-[0.82rem] text-slate-500">
-                            <span class="inline-flex items-center rounded-full bg-[#e8f3f8]/50 px-2.5 py-1 text-[0.75rem] font-semibold text-[#1a3a5c]">
-                                ${escapeHtml(categoryLabel)}
-                            </span>
-                        </div>
-                        <div class="mt-4 flex flex-wrap items-center gap-4 text-[0.82rem] text-slate-500">
-                            <span class="inline-flex items-center gap-2">
-                                <svg class="h-4 w-4 text-[#2ca5b8]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-                                    <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"></path>
-                                </svg>
-                                ${escapeHtml(campusName)}
-                            </span>
-                          
+                        <div class="grid gap-5 sm:grid-cols-[220px_minmax(0,1fr)] sm:items-start">
+                            <div class="flex h-[110px] items-center justify-start sm:justify-center">
+                                ${logo.primary ? `
+                                    <img
+                                        src="${escapeHtml(logo.primary)}"
+                                        alt="${escapeHtml(course.providerName || 'Provider logo')}"
+                                        class="h-auto w-auto max-h-[116px] max-w-[260px] rounded-xl border border-slate-200 ${logoBgClass} object-contain p-1"
+                                        onerror="${logo.fallback ? `this.onerror=null;this.src='${escapeHtml(logo.fallback)}';` : 'this.style.display=\'none\';'}"
+                                    />
+                                ` : `
+                                    <div class="inline-flex h-[92px] w-[210px] items-center justify-center rounded-xl border border-slate-200 bg-slate-50 px-4 text-center text-[0.8rem] font-semibold text-slate-500">
+                                        ${escapeHtml(course.providerName || 'Institution')}
+                                    </div>
+                                `}
+                            </div>
+
+                            <div class="min-w-0 border-l-2 border-[#2ca5b8]/30 pl-4 sm:pl-5">
+                                <div class="text-[0.84rem] font-semibold text-slate-700">${escapeHtml(course.providerName || 'Institution')}</div>
+
+                                <a
+                                    href="${buildCourseLink(course)}"
+                                    class="mt-2 block min-w-0 text-[0.95rem] font-bold leading-snug text-[#1a3a5c] transition hover:text-[#2ca5b8] hover:underline group-hover:text-[#1e6fa0] group-hover:underline sm:text-[1.05rem]"
+                                >
+                                    ${escapeHtml(course.title)}
+                                </a>
+
+                                <div class="mt-4 flex flex-wrap items-center gap-4 text-[0.82rem] text-slate-500">
+                                    <span class="inline-flex items-center gap-2">
+                                        <svg class="h-4 w-4 text-[#2ca5b8]" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                            <path d="M12 2C8.1 2 5 5.1 5 9c0 5.2 7 13 7 13s7-7.8 7-13c0-3.9-3.1-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z"></path>
+                                        </svg>
+                                        ${escapeHtml(campusName)}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1145,7 +1187,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCategoryButtons() {
-        if (state.searchType !== 'vet' || state.filters.level.length) {
+        if (state.searchType !== 'vet' || state.filters.level.length > 0 || state.search !== '') {
             return '';
         }
 
@@ -1155,6 +1197,7 @@ document.addEventListener('DOMContentLoaded', () => {
             { key: 'advanced_diploma', name: 'Advanced Diploma' },
             { key: 'graduate_diploma', name: 'Graduate Diploma' },
             { key: 'english', name: 'English' },
+            { key: 'other', name: 'Other' },
         ];
         
         const categoryCounts = {};
@@ -1472,10 +1515,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     content.addEventListener('click', (event) => {
+        if (event.target.closest('[data-clear-filters]')) {
+            clearFilters();
+            return;
+        }
+
         const pageButton = event.target.closest('[data-page]');
 
         if (pageButton) {
             changePage(Number.parseInt(pageButton.dataset.page || '', 10));
+            return;
+        }
+
+        const sizeButton = event.target.closest('[data-size]');
+
+        if (sizeButton) {
+            changeSize(Number.parseInt(sizeButton.dataset.size || '', 10));
+            return;
+        }
+
+        if (event.target.closest('[data-toggle-compact]')) {
+            state.compact = !state.compact;
+            updateBrowserUrl();
+            renderToolbar();
+            renderContent();
             return;
         }
 

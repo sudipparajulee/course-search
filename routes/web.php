@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 $splitQueryValues = function (Request $request, string ...$keys): array {
     $values = [];
@@ -139,6 +140,254 @@ $forwardJson = function (string $url) {
     }
 };
 
+$getVetCourseCategory = function (string $courseName): string {
+    $name = strtolower($courseName);
+
+    if (strpos($name, 'certificate') !== false) {
+        return 'Certificate';
+    }
+
+    if (strpos($name, 'advanced diploma') !== false) {
+        return 'Advanced Diploma';
+    }
+
+    if (strpos($name, 'graduate diploma') !== false) {
+        return 'Graduate Diploma';
+    }
+
+    if (strpos($name, 'diploma') !== false) {
+        return 'Diploma';
+    }
+
+    if (strpos($name, 'english') !== false) {
+        return 'English';
+    }
+
+    return 'Other';
+};
+
+$getVetCsvFiles = function (): array {
+    return array_filter(
+        glob(public_path('*.csv')) ?: [],
+        fn (string $path): bool => !in_array(basename($path), ['vet.csv', 'website.csv'], true)
+    );
+};
+
+$normalizeCollegeKey = function (string $value): string {
+    $normalized = (string) preg_replace('/[^a-z0-9]+/i', '', strtolower($value));
+    $aliases = [
+        'acbt' => 'actb',
+        'actb' => 'actb',
+        'northwest' => 'nortwest',
+        'northwestcollege' => 'nortwest',
+        'nortwestcollege' => 'nortwest',
+        'pakhanem' => 'pakenham',
+        'pakhanemcollege' => 'pakenham',
+        'pakenhamcollege' => 'pakenham',
+        'menziesinstituteoftechnology' => 'mit',
+        'bentleycollege' => 'bentley',
+        'lanewaycollege' => 'laneway',
+        'datumcollege' => 'datum',
+        'brittscollege' => 'britts',
+    ];
+
+    return $aliases[$normalized] ?? $normalized;
+};
+
+$extractWebsiteHost = function (?string $websiteUrl): ?string {
+    $url = trim((string) $websiteUrl);
+
+    if ($url === '') {
+        return null;
+    }
+
+    $host = parse_url($url, PHP_URL_HOST);
+
+    if (!is_string($host) || $host === '') {
+        return null;
+    }
+
+    return $host;
+};
+
+$buildLogoFromWebsite = function (?string $websiteUrl) use ($extractWebsiteHost): ?string {
+    $host = $extractWebsiteHost($websiteUrl);
+
+    if ($host === null) {
+        return null;
+    }
+
+    return 'https://logo.clearbit.com/'.rawurlencode($host);
+};
+
+$buildLogoFallbackFromWebsite = function (?string $websiteUrl) use ($extractWebsiteHost): ?string {
+    $host = $extractWebsiteHost($websiteUrl);
+
+    if ($host === null) {
+        return null;
+    }
+
+    return 'https://www.google.com/s2/favicons?domain='.rawurlencode($host).'&sz=128';
+};
+
+$isTruthyCsvFlag = function (?string $value): bool {
+    return in_array(strtolower(trim((string) $value)), ['yes', 'y', 'true', '1'], true);
+};
+
+$getCollegeMetadata = function () use ($normalizeCollegeKey, $buildLogoFromWebsite, $buildLogoFallbackFromWebsite, $isTruthyCsvFlag): array {
+    $websitePath = public_path('website.csv');
+    $mappings = [];
+    $logoOverrides = [
+        'britts' => 'https://brittscollege.edu.au/wp-content/uploads/2024/03/Britts-Logo.webp',
+    ];
+
+    if (!file_exists($websitePath)) {
+        return $mappings;
+    }
+
+    $csvFile = fopen($websitePath, 'r');
+    if ($csvFile === false) {
+        return $mappings;
+    }
+
+    while (($row = fgetcsv($csvFile)) !== false) {
+        $collegeName = trim((string) ($row[0] ?? ''));
+
+        if ($collegeName === '' || strtolower($collegeName) === 'college') {
+            continue;
+        }
+
+        $websiteUrl = trim((string) ($row[5] ?? ''));
+        $providerKey = $normalizeCollegeKey($collegeName);
+        $directLogoUrl = trim((string) ($row[7] ?? ''));
+
+        if ($directLogoUrl === '') {
+            $directLogoUrl = $logoOverrides[$providerKey] ?? '';
+        }
+
+        if ($directLogoUrl === '') {
+            $directLogoUrl = (string) ($buildLogoFromWebsite($websiteUrl) ?? '');
+        }
+
+        if ($directLogoUrl === '') {
+            Log::warning('Missing college logo URL mapping', [
+                'providerKey' => $providerKey,
+                'college' => $collegeName,
+                'websiteUrl' => $websiteUrl,
+            ]);
+        }
+
+        $mappings[$providerKey] = [
+            'college' => $collegeName,
+            'locations' => [
+                'Sydney' => $isTruthyCsvFlag($row[1] ?? ''),
+                'Melbourne' => $isTruthyCsvFlag($row[2] ?? ''),
+                'Adelaide' => $isTruthyCsvFlag($row[3] ?? ''),
+                'Brisbane' => $isTruthyCsvFlag($row[4] ?? ''),
+            ],
+            'websiteUrl' => $websiteUrl,
+            'applyFormLink' => trim((string) ($row[6] ?? '')),
+            'logoUrl' => $directLogoUrl,
+            'logoFallbackUrl' => $buildLogoFallbackFromWebsite($websiteUrl),
+        ];
+    }
+
+    fclose($csvFile);
+
+    return $mappings;
+};
+
+$getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use ($getVetCourseCategory, $normalizeCollegeKey): array {
+    $courses = [];
+    $courseIndex = 0;
+
+    foreach ($paths as $csvPath) {
+        $csvFile = fopen($csvPath, 'r');
+        if ($csvFile === false) {
+            continue;
+        }
+
+        $institutionLine = fgets($csvFile);
+        if ($institutionLine === false) {
+            fclose($csvFile);
+            continue;
+        }
+
+        $institutionValues = array_filter(str_getcsv($institutionLine), fn ($value) => trim((string) $value) !== '');
+        $csvBaseName = pathinfo($csvPath, PATHINFO_FILENAME);
+        $providerKey = $normalizeCollegeKey($csvBaseName);
+        $metadata = $collegeMetadata[$providerKey] ?? [];
+        $providerNameFromCsv = trim((string) ($institutionValues[0] ?? ''));
+        $providerName = trim((string) ($metadata['college'] ?? ($institutionValues[0] ?? $csvBaseName)));
+        $logoSourceUrl = trim((string) ($metadata['logoUrl'] ?? ''));
+        $logoFallbackUrl = trim((string) ($metadata['logoFallbackUrl'] ?? ''));
+        $logoProxyUrl = ($logoSourceUrl !== '' || $logoFallbackUrl !== '')
+            ? '/api/course-search/logo/'.rawurlencode($providerKey)
+            : '';
+        $locations = $metadata['locations'] ?? [
+            'Sydney' => false,
+            'Melbourne' => false,
+            'Adelaide' => false,
+            'Brisbane' => false,
+        ];
+        $availableCities = array_values(array_keys(array_filter($locations)));
+
+        fgetcsv($csvFile); // Skip header row
+
+        while (($row = fgetcsv($csvFile)) !== false) {
+            if (empty($row[0])) {
+                continue;
+            }
+
+            $courseIndex++;
+            $courseName = trim($row[0]);
+            $category = $getVetCourseCategory($courseName);
+            $categoryKey = strtolower(str_replace(' ', '_', $category));
+            $courseId = md5($courseName.'|'.$providerKey);
+            $legacyIds = array_values(array_unique(array_filter([
+                md5($courseName.'|'.$providerName),
+                $providerNameFromCsv !== '' ? md5($courseName.'|'.$providerNameFromCsv) : null,
+                md5($courseName),
+            ])));
+
+            $courses[] = [
+                'id' => $courseId,
+                'title' => $courseName,
+                'courseName' => $courseName,
+                'courseCode' => strtoupper($csvBaseName).'-'.str_pad($courseIndex, 4, '0', STR_PAD_LEFT),
+                'duration' => $row[1] ?? '',
+                'enrollmentFee' => $row[2] ?? '',
+                'materialFee' => $row[3] ?? '',
+                'tuitionFee' => $row[4] ?? '',
+                'promoFee' => $row[5] ?? '',
+                'notes' => $row[6] ?? '',
+                'courseUrl' => $courseId,
+                'legacyIds' => $legacyIds,
+                'status' => 'O',
+                'courseStatus' => 'O',
+                'type' => 'vet',
+                'isVet' => true,
+                'providerKey' => $providerKey,
+                'providerName' => $providerName,
+                'categoryKey' => $categoryKey,
+                'category' => $category,
+                'csvFile' => basename($csvPath),
+                'studyLocations' => $locations,
+                'availableCities' => $availableCities,
+                'websiteUrl' => trim((string) ($metadata['websiteUrl'] ?? '')),
+                'applyFormLink' => trim((string) ($metadata['applyFormLink'] ?? '')),
+                'logoUrl' => $logoProxyUrl,
+                'logoSourceUrl' => $logoSourceUrl,
+                'logoFallbackUrl' => $logoFallbackUrl,
+            ];
+        }
+
+        fclose($csvFile);
+    }
+
+    return $courses;
+};
+
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FrontendController;
@@ -199,71 +448,22 @@ Route::get('/api/course-search/details/{id}', function (string $id) use ($forwar
     return $forwardJson('https://coursehub.uac.edu.au/backend/course-search/api/details/international/course/'.rawurlencode($id));
 })->where('id', '[A-Za-z0-9_-]+');
 
-Route::get('/api/course-search', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson) {
+Route::get('/api/course-search', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson, $getVetCsvFiles, $getCollegeMetadata, $getVetCoursesFromCsvPaths) {
     $type = $resolveCourseSearchType($request->query('type'));
 
-    // Return vet courses from CSV file for 'vet' type
+    // Return vet courses from CSV files for 'vet' type
     if ($type === 'vet') {
-        $csvPath = public_path('vet.csv');
-        $courses = [];
-        
-        // Function to determine category from course name
-        $getCategory = function($courseName) {
-            $name = strtolower($courseName);
-            
-            if (strpos($name, 'certificate') !== false) {
-                return 'Certificate';
-            } elseif (strpos($name, 'advanced diploma') !== false) {
-                return 'Advanced Diploma';
-            } elseif (strpos($name, 'graduate diploma') !== false) {
-                return 'Graduate Diploma';
-            } elseif (strpos($name, 'diploma') !== false) {
-                return 'Diploma';
-            } elseif (strpos($name, 'english') !== false) {
-                return 'English';
-            } else {
-                return 'Other';
-            }
-        };
-        
-        if (file_exists($csvPath)) {
-            $csvFile = fopen($csvPath, 'r');
-            fgets($csvFile); // Skip institution name line
-            fgetcsv($csvFile); // Skip header row
-            
-            $courseIndex = 0;
-            
-            while (($row = fgetcsv($csvFile)) !== false) {
-                if (!empty($row[0])) { // Course name column
-                    $courseIndex++;
-                    $courseName = $row[0];
-                    $duration = $row[1] ?? '';
-                    $courseCode = 'VET' . str_pad($courseIndex, 4, '0', STR_PAD_LEFT);
-                    $category = $getCategory($courseName);
-                    
-                    $courses[] = [
-                        'id' => md5($courseName),
-                        'title' => $courseName,
-                        'courseName' => $courseName,
-                        'courseCode' => $courseCode,
-                        'duration' => $duration,
-                        'enrollmentFee' => $row[2] ?? '',
-                        'materialFee' => $row[3] ?? '',
-                        'tuitionFee' => $row[4] ?? '',
-                        'promoFee' => $row[5] ?? '',
-                        'notes' => $row[6] ?? '',
-                        'courseUrl' => md5($courseName),
-                        'status' => 'O', // Open
-                        'courseStatus' => 'O',
-                        'type' => 'vet',
-                        'isVet' => true, // Flag to identify vet courses for custom UI
-                        'category' => $category, // Add category based on qualification level
-                    ];
-                }
-            }
-            fclose($csvFile);
+        $csvPaths = $getVetCsvFiles();
+        $collegeMetadata = $getCollegeMetadata();
+        $courses = $getVetCoursesFromCsvPaths($csvPaths, $collegeMetadata);
+
+        $providerFilters = $splitQueryValues($request, 'inst', 'p');
+        if ($providerFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($providerFilters): bool {
+                return in_array((string) ($course['providerKey'] ?? ''), $providerFilters, true);
+            });
         }
-        
+
         // Filter by search query if provided
         $search = trim((string) $request->query('search', $request->query('query', '')));
         if ($search !== '') {
@@ -278,21 +478,20 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
         if ($level) {
             $levelArray = is_array($level) ? $level : [$level];
             $courses = array_filter($courses, function($course) use ($levelArray) {
-                $categoryKey = strtolower(str_replace(' ', '_', $course['category']));
-                return in_array($categoryKey, $levelArray);
+                return in_array((string) ($course['categoryKey'] ?? ''), $levelArray, true);
             });
         }
 
         // Implement pagination
         $page = max((int) $request->query('page', 1), 1);
-        $size = in_array((int) $request->query('size', 10), [10, 30, 50, 100, 500], true) 
-            ? (int) $request->query('size', 10) 
+        $size = in_array((int) $request->query('size', 10), [10, 30, 50, 100, 500], true)
+            ? (int) $request->query('size', 10)
             : 10;
-        
+
         $total = count($courses);
         $offset = ($page - 1) * $size;
         $paginatedCourses = array_slice(array_values($courses), $offset, $size);
-        
+
         return response()->json([
             'results' => $paginatedCourses,
             'stats' => [
@@ -332,55 +531,46 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
     return $forwardJson($url);
 });
 
-Route::get('/api/course-search/filters', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson) {
+Route::get('/api/course-search/filters', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson, $getVetCsvFiles, $getCollegeMetadata, $getVetCoursesFromCsvPaths) {
     $type = $resolveCourseSearchType($request->query('type'));
 
-    // Return vet filters from CSV file for 'vet' type
+    // Return vet filters from CSV files for 'vet' type
     if ($type === 'vet') {
-        $csvPath = public_path('vet.csv');
-        $courseCount = 0;
-        $categories = [];
-        
-        // Function to determine category from course name
-        $getCategory = function($courseName) {
-            $name = strtolower($courseName);
-            
-            if (strpos($name, 'certificate') !== false) {
-                return 'Certificate';
-            } elseif (strpos($name, 'advanced diploma') !== false) {
-                return 'Advanced Diploma';
-            } elseif (strpos($name, 'graduate diploma') !== false) {
-                return 'Graduate Diploma';
-            } elseif (strpos($name, 'diploma') !== false) {
-                return 'Diploma';
-            } elseif (strpos($name, 'english') !== false) {
-                return 'English';
-            } else {
-                return 'Other';
-            }
-        };
-        
-        if (file_exists($csvPath)) {
-            $csvFile = fopen($csvPath, 'r');
-            fgets($csvFile); // Skip institution name line
-            fgetcsv($csvFile); // Skip header row
-            
-            while (($row = fgetcsv($csvFile)) !== false) {
-                if (!empty($row[0])) {
-                    $courseCount++;
-                    $category = $getCategory($row[0]);
-                    
-                    // Count courses per category
-                    if (!isset($categories[$category])) {
-                        $categories[$category] = 0;
-                    }
-                    $categories[$category]++;
-                }
-            }
-            fclose($csvFile);
+        $csvPaths = $getVetCsvFiles();
+        $collegeMetadata = $getCollegeMetadata();
+        $courses = $getVetCoursesFromCsvPaths($csvPaths, $collegeMetadata);
+
+        $providerFilters = $splitQueryValues($request, 'inst', 'p');
+        if ($providerFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($providerFilters): bool {
+                return in_array((string) ($course['providerKey'] ?? ''), $providerFilters, true);
+            });
         }
-        
-        // Convert categories to filter format
+
+        $search = trim((string) $request->query('search', $request->query('query', '')));
+        if ($search !== '') {
+            $courses = array_filter($courses, function (array $course) use ($search): bool {
+                return stripos((string) ($course['title'] ?? ''), $search) !== false
+                    || stripos((string) ($course['courseCode'] ?? ''), $search) !== false;
+            });
+        }
+
+        $levelFilters = $splitQueryValues($request, 'level', 'courseLevel');
+        if ($levelFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($levelFilters): bool {
+                return in_array((string) ($course['categoryKey'] ?? ''), $levelFilters, true);
+            });
+        }
+
+        $categories = [];
+        foreach ($courses as $course) {
+            $category = $course['category'];
+            if (!isset($categories[$category])) {
+                $categories[$category] = 0;
+            }
+            $categories[$category]++;
+        }
+
         $categoryFilters = [];
         foreach ($categories as $category => $count) {
             $categoryFilters[] = [
@@ -389,17 +579,40 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
                 'count' => $count,
             ];
         }
-        
+
+        $providerGroups = [];
+        foreach ($courses as $course) {
+            $providerKey = (string) ($course['providerKey'] ?? '');
+
+            if ($providerKey === '') {
+                continue;
+            }
+
+            if (!isset($providerGroups[$providerKey])) {
+                $providerGroups[$providerKey] = [
+                    'key' => $providerKey,
+                    'name' => (string) ($course['providerName'] ?? $providerKey),
+                    'count' => 0,
+                ];
+            }
+
+            $providerGroups[$providerKey]['count']++;
+        }
+
+        usort($categoryFilters, fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+        $providerFiltersPayload = array_values($providerGroups);
+        usort($providerFiltersPayload, fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+
         return response()->json([
-            'providers' => [],
+            'providers' => $providerFiltersPayload,
             'fieldOfStudy' => [],
-            'courseLevel' => $categoryFilters, // Use courseLevel for qualification categories
+            'courseLevel' => $categoryFilters,
             'feeTypes' => [],
             'startMonths' => [],
             'modeOfAttendance' => [],
             'courseStatus' => [],
             'target' => [
-                'os' => $courseCount,
+                'os' => count($courses),
             ],
         ]);
     }
@@ -425,64 +638,176 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
     return $forwardJson('https://coursehub.uac.edu.au/backend/course-search/api/filters?'.$queryString);
 });
 
+Route::get('/api/course-search/vet/colleges', function (Request $request) use ($getVetCsvFiles, $getCollegeMetadata, $getVetCoursesFromCsvPaths) {
+    $csvPaths = $getVetCsvFiles();
+    $collegeMetadata = $getCollegeMetadata();
+    $courses = $getVetCoursesFromCsvPaths($csvPaths, $collegeMetadata);
+
+    $providerFilter = strtolower(trim((string) $request->query('provider', '')));
+    $colleges = [];
+
+    foreach ($courses as $course) {
+        $providerKey = (string) ($course['providerKey'] ?? '');
+
+        if ($providerKey === '') {
+            continue;
+        }
+
+        if ($providerFilter !== '' && $providerFilter !== strtolower($providerKey)) {
+            continue;
+        }
+
+        if (!isset($colleges[$providerKey])) {
+            $colleges[$providerKey] = [
+                'providerKey' => $providerKey,
+                'providerName' => (string) ($course['providerName'] ?? $providerKey),
+                'csvFile' => (string) ($course['csvFile'] ?? ''),
+                'websiteUrl' => (string) ($course['websiteUrl'] ?? ''),
+                'applyFormLink' => (string) ($course['applyFormLink'] ?? ''),
+                'logoUrl' => (string) ($course['logoUrl'] ?? ''),
+                'logoFallbackUrl' => (string) ($course['logoFallbackUrl'] ?? ''),
+                'availableCities' => (array) ($course['availableCities'] ?? []),
+                'studyLocations' => (array) ($course['studyLocations'] ?? []),
+                'totalCourses' => 0,
+                'categories' => [],
+            ];
+        }
+
+        $colleges[$providerKey]['totalCourses']++;
+        $categoryName = (string) ($course['category'] ?? 'Other');
+        $categoryKey = (string) ($course['categoryKey'] ?? strtolower(str_replace(' ', '_', $categoryName)));
+
+        if (!isset($colleges[$providerKey]['categories'][$categoryKey])) {
+            $colleges[$providerKey]['categories'][$categoryKey] = [
+                'key' => $categoryKey,
+                'name' => $categoryName,
+                'count' => 0,
+            ];
+        }
+
+        $colleges[$providerKey]['categories'][$categoryKey]['count']++;
+    }
+
+    $payload = array_values(array_map(function (array $college): array {
+        $college['categories'] = array_values($college['categories']);
+        usort($college['categories'], fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+
+        return $college;
+    }, $colleges));
+
+    usort($payload, fn (array $a, array $b): int => strcmp($a['providerName'], $b['providerName']));
+
+    return response()->json([
+        'totalColleges' => count($payload),
+        'results' => $payload,
+    ]);
+});
+
+Route::get('/api/course-search/logo/{provider}', function (string $provider) use ($normalizeCollegeKey, $getCollegeMetadata) {
+    $providerKey = $normalizeCollegeKey($provider);
+    $metadata = $getCollegeMetadata()[$providerKey] ?? null;
+
+    if (!is_array($metadata)) {
+        return response('', 404);
+    }
+
+    $logoSourceUrl = trim((string) ($metadata['logoUrl'] ?? ''));
+    $fallbackUrl = trim((string) ($metadata['logoFallbackUrl'] ?? ''));
+    $websiteUrl = trim((string) ($metadata['websiteUrl'] ?? ''));
+    $targetUrl = $logoSourceUrl !== '' ? $logoSourceUrl : $fallbackUrl;
+
+    if ($targetUrl === '') {
+        return response('', 404);
+    }
+
+    $redirectToUrl = function (?string $url) {
+        $url = trim((string) $url);
+
+        if ($url === '') {
+            return response('', 404);
+        }
+
+        if (str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
+            return redirect()->away($url);
+        }
+
+        return response('', 404);
+    };
+
+    $headers = [
+        'Accept' => 'image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8',
+        'User-Agent' => 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/135.0.0.0 Safari/537.36',
+    ];
+
+    if ($websiteUrl !== '') {
+        $headers['Referer'] = $websiteUrl;
+
+        $origin = parse_url($websiteUrl, PHP_URL_SCHEME).'://'.parse_url($websiteUrl, PHP_URL_HOST);
+        if ($origin !== '://') {
+            $headers['Origin'] = $origin;
+        }
+    }
+
+    try {
+        $response = Http::withHeaders($headers)
+            ->timeout(20)
+            ->retry(1, 200)
+            ->get($targetUrl);
+
+        $contentType = strtolower((string) $response->header('Content-Type', ''));
+
+        if ((!$response->successful() || !str_starts_with($contentType, 'image/')) && $fallbackUrl !== '' && $targetUrl !== $fallbackUrl) {
+            $response = Http::withHeaders($headers)
+                ->timeout(20)
+                ->retry(1, 200)
+                ->get($fallbackUrl);
+            $contentType = strtolower((string) $response->header('Content-Type', ''));
+        }
+
+        if (!$response->successful()) {
+            return $redirectToUrl($targetUrl !== '' ? $targetUrl : $fallbackUrl);
+        }
+
+        if (!str_starts_with($contentType, 'image/')) {
+            return $redirectToUrl($targetUrl !== '' ? $targetUrl : $fallbackUrl);
+        }
+
+        return response($response->body(), 200)
+            ->header('Content-Type', $contentType)
+            ->header('Cache-Control', 'public, max-age=86400');
+    } catch (\Throwable $exception) {
+        return $redirectToUrl($targetUrl !== '' ? $targetUrl : $fallbackUrl);
+    }
+})->where('provider', '[A-Za-z0-9_-]+');
+
 Route::get('/api/course-search/campus', function () use ($forwardJson) {
     return $forwardJson('https://coursehub.uac.edu.au/backend/course-search/api/campus');
 });
 
-Route::get('/api/course-search/details/{type}/{id}', function (string $type, string $id) use ($resolveCourseSearchType, $forwardJson) {
+Route::get('/api/course-search/details/{type}/{id}', function (string $type, string $id) use ($resolveCourseSearchType, $forwardJson, $getVetCsvFiles, $getCollegeMetadata, $getVetCoursesFromCsvPaths) {
     $resolvedType = $resolveCourseSearchType($type);
 
-    // Return vet course details from CSV file for 'vet' type
+    // Return vet course details from CSV files for 'vet' type
     if ($resolvedType === 'vet') {
-        $csvPath = public_path('vet.csv');
-        
-        if (file_exists($csvPath)) {
-            $csvFile = fopen($csvPath, 'r');
-            fgets($csvFile); // Skip institution name line
-            fgetcsv($csvFile); // Skip header row
-            
-            $courseIndex = 0;
-            
-            while (($row = fgetcsv($csvFile)) !== false) {
-                if (!empty($row[0])) {
-                    $courseIndex++;
-                    $courseName = $row[0];
-                    
-                    if (md5($courseName) === $id) {
-                        fclose($csvFile);
-                        $duration = $row[1] ?? '';
-                        $courseCode = 'VET' . str_pad($courseIndex, 4, '0', STR_PAD_LEFT);
-                        
-                        return response()->json([
-                            'course' => [
-                                'id' => md5($courseName),
-                                'title' => $courseName,
-                                'courseName' => $courseName,
-                                'courseCode' => $courseCode,
-                                'duration' => $duration,
-                                'enrollmentFee' => $row[2] ?? '',
-                                'materialFee' => $row[3] ?? '',
-                                'tuitionFee' => $row[4] ?? '',
-                                'promoFee' => $row[5] ?? '',
-                                'notes' => $row[6] ?? '',
-                                'courseUrl' => md5($courseName),
-                                'status' => 'O', // Open
-                                'courseStatus' => 'O',
-                                'type' => 'vet',
-                                'isVet' => true, // Flag to identify vet courses for custom UI
-                            ],
-                            'contentJson' => [
-                                'courseTitle' => $courseName,
-                            ],
-                            'courseDoc' => [],
-                            'courseList' => [],
-                        ]);
-                    }
-                }
+        $csvPaths = $getVetCsvFiles();
+        $collegeMetadata = $getCollegeMetadata();
+        $courses = $getVetCoursesFromCsvPaths($csvPaths, $collegeMetadata);
+
+        foreach ($courses as $course) {
+            $legacyIds = is_array($course['legacyIds'] ?? null) ? $course['legacyIds'] : [];
+
+            if ($course['id'] === $id || in_array($id, $legacyIds, true)) {
+                return response()->json([
+                    'course' => $course,
+                    'contentJson' => [
+                        'courseTitle' => $course['title'],
+                    ],
+                    'courseDoc' => [],
+                    'courseList' => [],
+                ]);
             }
-            fclose($csvFile);
         }
-        
+
         return response()->json([
             'message' => 'Course not found',
         ], 404);

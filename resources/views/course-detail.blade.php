@@ -68,6 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         details: @json(url('/api/course-search/details/'.$searchType)),
         campus: @json(url('/api/course-search/campus')),
         applyInfo: @json(url('/api/course-search/apply-info')),
+        vetColleges: @json(url('/api/course-search/vet/colleges')),
         search: @json($searchPagePath),
         home: @json(url('/')),
     };
@@ -340,6 +341,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderVetDetailsPage(course) {
         const title = normalizeText(course.title || course.courseName || '');
+        const logoUrl = sanitizeUrl(course.logoUrl || course.logoSourceUrl || course.logoFallbackUrl || '');
+        const logoSourceUrl = sanitizeUrl(course.logoSourceUrl || '');
+        const logoFallbackUrl = sanitizeUrl(course.logoFallbackUrl || '');
+        const websiteUrl = sanitizeUrl(course.websiteUrl || '');
+        const applyUrl = sanitizeUrl(course.applyFormLink || '/apply');
+        const applyTarget = applyUrl.startsWith('http') ? '_blank' : '_self';
+        const applyRel = applyUrl.startsWith('http') ? 'noreferrer' : '';
+        const logoBgClass = course.providerKey === 'mit'
+            ? 'bg-[#0f4d92]'
+            : (course.providerKey === 'igi' ? 'bg-black' : 'bg-white');
+        const cities = Array.isArray(course.availableCities) && course.availableCities.length
+            ? course.availableCities.join(' / ')
+            : 'Campus details available on request';
 
         document.title = `${title} | Course detail`;
 
@@ -354,6 +368,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <section class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                     <div>
                         <h1 class="text-[2rem] font-semibold leading-tight text-slate-900 sm:text-[2.35rem]">${escapeHtml(title)}</h1>
+                        <div class="mt-4 flex flex-wrap items-center gap-4 text-[0.95rem] text-slate-600">
+                            <span class="font-semibold text-slate-800">${escapeHtml(course.providerName || 'Institution')}</span>
+                            <span>${escapeHtml(cities)}</span>
+                            ${websiteUrl ? `<a href="${escapeHtml(websiteUrl)}" target="_blank" rel="noreferrer" class="font-semibold text-[#1e6fa0] underline-offset-2 hover:underline">Visit website</a>` : ''}
+                        </div>
+                        ${logoUrl ? `
+                            <div class="mt-4">
+                                <img src="${escapeHtml(logoUrl)}" alt="${escapeHtml(course.providerName || 'Institution logo')}" class="h-16 w-auto max-w-[220px] rounded-xl border border-slate-200 ${logoBgClass} object-contain p-2" onerror="${logoSourceUrl || logoFallbackUrl ? `this.onerror=null;this.src='${escapeHtml(logoSourceUrl || logoFallbackUrl)}';` : 'this.style.display=\'none\';'}" />
+                            </div>
+                        ` : ''}
                     </div>
 
                     <div class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
@@ -400,7 +424,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <aside class="self-start lg:sticky lg:top-6">
                         <div class="space-y-5 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
                             <a
-                                href="/apply"
+                                href="${escapeHtml(applyUrl)}"
+                                target="${escapeHtml(applyTarget)}"
+                                rel="${escapeHtml(applyRel)}"
                                 class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1a3a5c] px-5 py-4 text-[1rem] font-semibold text-white shadow-sm transition hover:bg-[#2ca5b8]"
                             >
                                 <svg class='h-5 w-5' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 20h9'/><path d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'/></svg>
@@ -434,6 +460,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const providerName = normalizeText(course.providerName || courseDoc.providerName || '');
         const providerId = course.providerId || courseDoc.providerId || '';
         const logo = getLogoUrl(providerId, course.providerLogo);
+        const applyUrl = sanitizeUrl(course.applyFormLink || '/apply');
+        const applyTarget = applyUrl.startsWith('http') ? '_blank' : '_self';
+        const applyRel = applyUrl.startsWith('http') ? 'noreferrer' : '';
         const feeNote = course.feeNote || '';
 
         // Custom rendering for VET courses
@@ -697,7 +726,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <aside class="self-start lg:sticky lg:top-6">
                         <div class="space-y-5 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
                                 <a
-                                    href="/apply"
+                                    href="${escapeHtml(applyUrl)}"
+                                    target="${escapeHtml(applyTarget)}"
+                                    rel="${escapeHtml(applyRel)}"
                                     class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1a3a5c] px-5 py-4 text-[1rem] font-semibold text-white shadow-sm transition hover:bg-[#2ca5b8]"
                                 >
                                     <svg class='h-5 w-5' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 20h9'/><path d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'/></svg>
