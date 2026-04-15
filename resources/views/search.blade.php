@@ -817,9 +817,20 @@ document.addEventListener('DOMContentLoaded', () => {
         }));
     }
 
+    function shouldShowVetCategoryCards() {
+        if (state.searchType !== 'vet') {
+            return false;
+        }
+
+        const currentPath = window.location.pathname.replace(/\/+$/, '') || '/';
+        const vetPath = (searchTypeMeta.vet?.pagePath || '').replace(/\/+$/, '') || '/';
+
+        return currentPath === vetPath && window.location.search === '';
+    }
+
     function renderEmptyState() {
         let tiles = getTileOptions();
-        const vetCategories = state.searchType === 'vet' ? getVetCategoryOptions() : [];
+        const vetCategories = shouldShowVetCategoryCards() ? getVetCategoryOptions() : [];
 
         return `
             <div class="space-y-8">
@@ -1199,7 +1210,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderCategoryButtons() {
-        if (state.searchType !== 'vet' || state.filters.level.length > 0 || state.search !== '') {
+        if (!shouldShowVetCategoryCards()) {
             return '';
         }
 
