@@ -102,7 +102,7 @@
         {{-- Sidebar Panel --}}
         <div id="mobile-panel" class="fixed inset-y-0 right-0 z-[110] w-full max-w-sm transform translate-x-full overflow-y-auto bg-white px-6 py-6 transition-transform duration-300 ease-in-out shadow-2xl">
             <div class="flex items-center justify-between">
-                <a href="/" class="-m-1.5 p-1.5 flex h-9 shrink-0 items-center overflow-hidden">
+                <a href="{{ url('/') }}" class="-m-1.5 p-1.5 flex h-9 shrink-0 items-center overflow-hidden">
                     <img src="{{ asset('images/logo.png') }}" alt="StudyAide logo" class="h-full w-auto object-contain" />
                 </a>
                 <button type="button" id="close-menu-btn" class="-m-2.5 p-2.5 text-slate-700 transition hover:text-red-500">
@@ -211,7 +211,7 @@
         <div class="mx-auto max-w-7xl px-4 lg:px-8">
             <div class="flex flex-col items-center justify-between gap-6 md:flex-row">
                 <div class="flex items-center gap-6">
-                    <a href="/" class="h-8 shrink-0">
+                    <a href="{{ url('/') }}" class="h-8 shrink-0">
                         <img src="{{ asset('images/logo.png') }}" alt="StudyAide" class="h-full w-auto opacity-80 transition hover:opacity-100" />
                     </a>
                     <nav class="hidden gap-5 text-sm font-medium text-slate-500 md:flex">

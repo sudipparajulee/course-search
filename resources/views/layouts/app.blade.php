@@ -121,7 +121,7 @@
                     <h2 class="text-base font-semibold text-[#1a3a5c]">@yield('page-title', 'Admin')</h2>
                 </div>
                 <div class="flex items-center gap-3">
-                    <a href="/" target="_blank"
+                    <a href="{{ url('/') }}" target="_blank"
                         class="hidden sm:inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-xs font-medium text-slate-600 transition hover:bg-slate-50">
                         <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />

@@ -63,22 +63,22 @@
 							'international' => [
 									'label'  => 'International',
 									'desc'   => "You’re an International student, and completed Year 12 and degree and applying further.",
-									'action' => '/course-search/search/find-a-course-international',
+									'action' => url('/course-search/search/find-a-course-international'),
 								],
 							'undergraduate' => [
 									'label'  => 'Undergraduate',
 									'desc'   => "You have finished high school, never graduated from university, or are returning to study something different.",
-									'action' => '/course-search/search/find-a-course-undergraduate',
+									'action' => url('/course-search/search/find-a-course-undergraduate'),
 								],
 							'postgraduate' => [
 									'label'  => 'Postgraduate',
 									'desc'   => "You have completed an undergraduate degree and are looking to pursue a higher-level qualification.",
-									'action' => '/course-search/search/find-a-course-postgraduate',
+									'action' => url('/course-search/search/find-a-course-postgraduate'),
 								],
                             'vet' => [
                                     'label'  => 'VET',
                                     'desc'   => "You are interested in Vocational Education and Training courses.",
-                                    'action' => '/course-search/search/find-a-course-vet',
+                                    'action' => url('/course-search/search/find-a-course-vet'),
                                 ],
 
 						];
