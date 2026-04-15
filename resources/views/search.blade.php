@@ -270,7 +270,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.filters.inst.forEach((value) => params.append('inst', value));
         state.filters.fos.forEach((value) => params.append('fos', value));
         state.filters.level.forEach((value) => params.append('level', value));
-        // state.filters.fee.forEach((value) => params.append('fee', value));
+        state.filters.fee.forEach((value) => params.append('fee', value));
         state.filters.start.forEach((value) => params.append('start', value));
         state.filters.attendance.forEach((value) => params.append('attendance', value));
 
@@ -372,16 +372,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         if (group === 'fos') {
-            return value;
+            return (state.filtersData?.fieldOfStudy || []).find((item) => item.key === value)?.name || value;
         }
 
         if (group === 'level') {
             return levelLabels[value] || value;
         }
 
-        // if (group === 'fee') {
-        //     return feeLabels[value] || value;
-        // }
+        if (group === 'fee') {
+            return (state.filtersData?.feeTypes || []).find((item) => item.key === value)?.name || feeLabels[value] || value;
+        }
 
         if (group === 'start') {
             return monthLabels[value] || value;
@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (key === 'fos') {
             const options = (filtersData.fieldOfStudy || []).map((item) => ({
                 value: item.key,
-                label: item.key,
+                label: item.name || item.key,
                 count: Number(item.count || 0),
             }));
 
@@ -632,17 +632,29 @@ document.addEventListener('DOMContentLoaded', () => {
             }));
         }
 
-        // if (key === 'fee') {
-        //     const counts = Object.fromEntries((filtersData.feeTypes || []).map((item) => [item.key, Number(item.count || 0)]));
-        //     const ignoredFees = ['DFEE', 'CSP'];
-        //     const values = unique([...feeOrder, ...state.filters.fee]).filter((value) => !ignoredFees.includes(value) && (counts[value] > 0 || selected.has(value)));
+        if (key === 'fee') {
+            if (state.searchType === 'vet') {
+                const feeData = filtersData.feeTypes || [];
+                const counts = Object.fromEntries(feeData.map((item) => [item.key, Number(item.count || 0)]));
+                const values = unique([...feeData.map((item) => item.key), ...state.filters.fee]).filter((value) => counts[value] > 0 || selected.has(value));
 
-        //     return values.map((value) => ({
-        //         value,
-        //         label: feeLabels[value] || value,
-        //         count: counts[value] || 0,
-        //     }));
-        // }
+                return values.map((value) => ({
+                    value,
+                    label: feeData.find((item) => item.key === value)?.name || value,
+                    count: counts[value] || 0,
+                }));
+            }
+
+            const counts = Object.fromEntries((filtersData.feeTypes || []).map((item) => [item.key, Number(item.count || 0)]));
+            const ignoredFees = ['DFEE', 'CSP'];
+            const values = unique([...feeOrder, ...state.filters.fee]).filter((value) => !ignoredFees.includes(value) && (counts[value] > 0 || selected.has(value)));
+
+            return values.map((value) => ({
+                value,
+                label: feeLabels[value] || value,
+                count: counts[value] || 0,
+            }));
+        }
 
         if (key === 'start') {
             const counts = Object.fromEntries((filtersData.startMonths || []).map((item) => [item.key, Number(item.count || 0)]));

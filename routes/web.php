@@ -166,6 +166,135 @@ $getVetCourseCategory = function (string $courseName): string {
     return 'Other';
 };
 
+$parseVetFeeAmount = function (?string $value): ?float {
+    $text = trim((string) $value);
+
+    if ($text === '') {
+        return null;
+    }
+
+    if (!preg_match('/-?\d+(?:\.\d+)?/', str_replace(',', '', $text), $matches)) {
+        return null;
+    }
+
+    return (float) $matches[0];
+};
+
+$getVetFeeBucket = function (?string $tuitionFee) use ($parseVetFeeAmount): ?string {
+    $text = strtolower(trim((string) $tuitionFee));
+
+    if ($text === '') {
+        return null;
+    }
+
+    if (str_contains($text, 'per level') || str_contains($text, 'per week') || str_contains($text, 'per month')) {
+        return 'variable';
+    }
+
+    $amount = $parseVetFeeAmount($tuitionFee);
+
+    if ($amount === null) {
+        return null;
+    }
+
+    if ($amount <= 5000) {
+        return 'fee_low';
+    }
+
+    if ($amount <= 10000) {
+        return 'fee_mid';
+    }
+
+    return 'fee_high';
+};
+
+$getVetAreaKeys = function (string $courseName): array {
+    $name = strtolower($courseName);
+    $areas = [];
+
+    $keywordMap = [
+        'building' => 'building-construction',
+        'construction' => 'building-construction',
+        'carpentry' => 'trades',
+        'painting' => 'trades',
+        'tiling' => 'trades',
+        'cabinet' => 'trades',
+        'plumbing' => 'trades',
+        'plastering' => 'trades',
+        'stonemasonry' => 'trades',
+        'ceiling' => 'trades',
+        'glazing' => 'trades',
+        'business' => 'business-management',
+        'leadership' => 'business-management',
+        'management' => 'business-management',
+        'marketing' => 'marketing-communication',
+        'communication' => 'marketing-communication',
+        'cookery' => 'hospitality-cookery',
+        'kitchen' => 'hospitality-cookery',
+        'hospitality' => 'hospitality-cookery',
+        'patisserie' => 'hospitality-cookery',
+        'english' => 'english-language',
+        'academic purposes' => 'english-language',
+    ];
+
+    foreach ($keywordMap as $needle => $areaKey) {
+        if (str_contains($name, $needle)) {
+            $areas[] = $areaKey;
+        }
+    }
+
+    if ($areas === []) {
+        $areas[] = 'other';
+    }
+
+    return array_values(array_unique($areas));
+};
+
+$getVetAreaLabel = function (string $areaKey): string {
+    $labels = [
+        'building-construction' => 'Building & Construction',
+        'trades' => 'Trades',
+        'business-management' => 'Business & Management',
+        'marketing-communication' => 'Marketing & Communication',
+        'hospitality-cookery' => 'Hospitality & Cookery',
+        'english-language' => 'English Language',
+        'other' => 'Other',
+    ];
+
+    return $labels[$areaKey] ?? $areaKey;
+};
+
+$getVetIntakeMonths = function (?string $text): array {
+    $value = strtolower((string) $text);
+    if (trim($value) === '') {
+        return [];
+    }
+
+    $months = [
+        'january' => '01',
+        'february' => '02',
+        'march' => '03',
+        'april' => '04',
+        'may' => '05',
+        'june' => '06',
+        'july' => '07',
+        'august' => '08',
+        'september' => '09',
+        'october' => '10',
+        'november' => '11',
+        'december' => '12',
+    ];
+
+    $detected = [];
+    foreach ($months as $name => $key) {
+        if (str_contains($value, $name)) {
+            $detected[] = $key;
+        }
+    }
+
+    return array_values(array_unique($detected));
+};
+
 $getVetCsvFiles = function (): array {
     return array_filter(
         glob(public_path('*.csv')) ?: [],
@@ -297,7 +426,7 @@ $getCollegeMetadata = function () use ($normalizeCollegeKey, $buildLogoFromWebsi
     return $mappings;
 };
 
-$getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use ($getVetCourseCategory, $normalizeCollegeKey): array {
+$getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use ($getVetCourseCategory, $normalizeCollegeKey, $getVetFeeBucket, $getVetAreaKeys, $getVetIntakeMonths): array {
     $courses = [];
     $courseIndex = 0;
 
@@ -343,6 +472,10 @@ $getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use
             $courseName = trim($row[0]);
             $category = $getVetCourseCategory($courseName);
             $categoryKey = strtolower(str_replace(' ', '_', $category));
+            $tuitionFee = $row[4] ?? '';
+            $feeBucket = $getVetFeeBucket($tuitionFee);
+            $areaKeys = $getVetAreaKeys($courseName);
+            $intakeMonths = $getVetIntakeMonths(($row[6] ?? '').' '.$courseName);
             $courseId = md5($courseName.'|'.$providerKey);
             $legacyIds = array_values(array_unique(array_filter([
                 md5($courseName.'|'.$providerName),
@@ -358,7 +491,7 @@ $getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use
                 'duration' => $row[1] ?? '',
                 'enrollmentFee' => $row[2] ?? '',
                 'materialFee' => $row[3] ?? '',
-                'tuitionFee' => $row[4] ?? '',
+                'tuitionFee' => $tuitionFee,
                 'promoFee' => $row[5] ?? '',
                 'notes' => $row[6] ?? '',
                 'courseUrl' => $courseId,
@@ -371,6 +504,9 @@ $getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use
                 'providerName' => $providerName,
                 'categoryKey' => $categoryKey,
                 'category' => $category,
+                'fieldOfStudy' => $areaKeys,
+                'feeBucket' => $feeBucket,
+                'intakeMonths' => $intakeMonths,
                 'csvFile' => basename($csvPath),
                 'studyLocations' => $locations,
                 'availableCities' => $availableCities,
@@ -482,6 +618,29 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
             });
         }
 
+        $fosFilters = $splitQueryValues($request, 'fos');
+        if ($fosFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($fosFilters): bool {
+                $areas = is_array($course['fieldOfStudy'] ?? null) ? $course['fieldOfStudy'] : [];
+                return count(array_intersect($areas, $fosFilters)) > 0;
+            });
+        }
+
+        $feeFilters = $splitQueryValues($request, 'fee');
+        if ($feeFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($feeFilters): bool {
+                return in_array((string) ($course['feeBucket'] ?? ''), $feeFilters, true);
+            });
+        }
+
+        $startFilters = $splitQueryValues($request, 'start', 'mm');
+        if ($startFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($startFilters): bool {
+                $months = is_array($course['intakeMonths'] ?? null) ? $course['intakeMonths'] : [];
+                return count(array_intersect($months, $startFilters)) > 0;
+            });
+        }
+
         // Implement pagination
         $page = max((int) $request->query('page', 1), 1);
         $size = in_array((int) $request->query('size', 10), [10, 30, 50, 100, 500], true)
@@ -531,7 +690,7 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
     return $forwardJson($url);
 });
 
-Route::get('/api/course-search/filters', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson, $getVetCsvFiles, $getCollegeMetadata, $getVetCoursesFromCsvPaths) {
+Route::get('/api/course-search/filters', function (Request $request) use ($resolveCourseSearchType, $splitQueryValues, $buildQueryString, $forwardJson, $getVetCsvFiles, $getCollegeMetadata, $getVetCoursesFromCsvPaths, $getVetAreaLabel) {
     $type = $resolveCourseSearchType($request->query('type'));
 
     // Return vet filters from CSV files for 'vet' type
@@ -562,6 +721,29 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
             });
         }
 
+        $fosFilters = $splitQueryValues($request, 'fos');
+        if ($fosFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($fosFilters): bool {
+                $areas = is_array($course['fieldOfStudy'] ?? null) ? $course['fieldOfStudy'] : [];
+                return count(array_intersect($areas, $fosFilters)) > 0;
+            });
+        }
+
+        $feeFilters = $splitQueryValues($request, 'fee');
+        if ($feeFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($feeFilters): bool {
+                return in_array((string) ($course['feeBucket'] ?? ''), $feeFilters, true);
+            });
+        }
+
+        $startFilters = $splitQueryValues($request, 'start', 'mm');
+        if ($startFilters !== []) {
+            $courses = array_filter($courses, function (array $course) use ($startFilters): bool {
+                $months = is_array($course['intakeMonths'] ?? null) ? $course['intakeMonths'] : [];
+                return count(array_intersect($months, $startFilters)) > 0;
+            });
+        }
+
         $categories = [];
         foreach ($courses as $course) {
             $category = $course['category'];
@@ -581,6 +763,9 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
         }
 
         $providerGroups = [];
+        $fieldOfStudyGroups = [];
+        $feeGroups = [];
+        $startMonthGroups = [];
         foreach ($courses as $course) {
             $providerKey = (string) ($course['providerKey'] ?? '');
 
@@ -597,18 +782,64 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
             }
 
             $providerGroups[$providerKey]['count']++;
+
+            foreach ((array) ($course['fieldOfStudy'] ?? []) as $areaKey) {
+                if (!isset($fieldOfStudyGroups[$areaKey])) {
+                    $fieldOfStudyGroups[$areaKey] = [
+                        'key' => $areaKey,
+                        'name' => $getVetAreaLabel($areaKey),
+                        'count' => 0,
+                    ];
+                }
+                $fieldOfStudyGroups[$areaKey]['count']++;
+            }
+
+            $feeKey = (string) ($course['feeBucket'] ?? '');
+            if ($feeKey !== '') {
+                $feeNames = [
+                    'fee_low' => 'Tuition up to $5,000',
+                    'fee_mid' => 'Tuition $5,001 - $10,000',
+                    'fee_high' => 'Tuition above $10,000',
+                    'variable' => 'Variable / Per level',
+                ];
+
+                if (!isset($feeGroups[$feeKey])) {
+                    $feeGroups[$feeKey] = [
+                        'key' => $feeKey,
+                        'name' => $feeNames[$feeKey] ?? $feeKey,
+                        'count' => 0,
+                    ];
+                }
+                $feeGroups[$feeKey]['count']++;
+            }
+
+            foreach ((array) ($course['intakeMonths'] ?? []) as $monthKey) {
+                if (!isset($startMonthGroups[$monthKey])) {
+                    $startMonthGroups[$monthKey] = [
+                        'key' => $monthKey,
+                        'count' => 0,
+                    ];
+                }
+                $startMonthGroups[$monthKey]['count']++;
+            }
         }
 
         usort($categoryFilters, fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
         $providerFiltersPayload = array_values($providerGroups);
+        $fieldOfStudyPayload = array_values($fieldOfStudyGroups);
+        $feePayload = array_values($feeGroups);
+        $startMonthsPayload = array_values($startMonthGroups);
         usort($providerFiltersPayload, fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+        usort($fieldOfStudyPayload, fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+        usort($feePayload, fn (array $a, array $b): int => strcmp($a['name'], $b['name']));
+        usort($startMonthsPayload, fn (array $a, array $b): int => strcmp($a['key'], $b['key']));
 
         return response()->json([
             'providers' => $providerFiltersPayload,
-            'fieldOfStudy' => [],
+            'fieldOfStudy' => $fieldOfStudyPayload,
             'courseLevel' => $categoryFilters,
-            'feeTypes' => [],
-            'startMonths' => [],
+            'feeTypes' => $feePayload,
+            'startMonths' => $startMonthsPayload,
             'modeOfAttendance' => [],
             'courseStatus' => [],
             'target' => [
