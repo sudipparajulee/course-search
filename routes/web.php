@@ -108,7 +108,7 @@ $resolveCourseSearchType = function (?string $type) use ($courseSearchTypes): st
 };
 
 $courseSearchPath = function (string $type) use ($courseSearchTypes): string {
-    return '/course-search/search/'.$courseSearchTypes[$type]['page_slug'];
+    return url('/course-search/search/'.$courseSearchTypes[$type]['page_slug']);
 };
 
 $courseSearchTypeMeta = function () use ($courseSearchTypes, $courseSearchPath): array {
@@ -117,7 +117,7 @@ $courseSearchTypeMeta = function () use ($courseSearchTypes, $courseSearchPath):
             $type => [
                 'label' => $config['label'],
                 'pagePath' => $courseSearchPath($type),
-                'detailPath' => '/course-search/search/'.$type.'/course',
+                'detailPath' => url('/course-search/search/'.$type.'/course'),
                 'headingSuffix' => $config['heading_suffix'],
             ],
         ])
@@ -563,14 +563,14 @@ foreach ($courseSearchTypes as $type => $config) {
 Route::get('/search/international/course/{id}', function (string $id, Request $request) {
     $queryString = $request->getQueryString();
 
-    return redirect('/course-search/search/international/course/'.rawurlencode($id).($queryString ? '?'.$queryString : ''));
+    return redirect(url('/course-search/search/international/course/'.rawurlencode($id).($queryString ? '?'.$queryString : '')));
 })->where('id', '[A-Za-z0-9_-]+');
 
 Route::get('/search/{type}/course/{id}', function (string $type, string $id, Request $request) use ($resolveCourseSearchType) {
     $resolvedType = $resolveCourseSearchType($type);
     $queryString = $request->getQueryString();
 
-    return redirect('/course-search/search/'.$resolvedType.'/course/'.rawurlencode($id).($queryString ? '?'.$queryString : ''));
+    return redirect(url('/course-search/search/'.$resolvedType.'/course/'.rawurlencode($id).($queryString ? '?'.$queryString : '')));
 })->where('type', 'undergraduate|postgraduate|international|vet|online')->where('id', '[A-Za-z0-9_-]+');
 
 Route::get('/course-search/search/{type}/course/{id}', function (string $type, string $id) use ($resolveCourseSearchType, $courseSearchTypes, $courseSearchPath) {
@@ -608,7 +608,7 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
         $search = trim((string) $request->query('search', $request->query('query', '')));
         if ($search !== '') {
             $courses = array_filter($courses, function($course) use ($search) {
-                return stripos($course['title'], $search) !== false || 
+                return stripos($course['title'], $search) !== false ||
                        stripos($course['courseCode'], $search) !== false;
             });
         }

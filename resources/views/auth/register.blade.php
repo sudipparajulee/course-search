@@ -15,7 +15,7 @@
 <div class="w-full max-w-xl">
 
     {{-- Logo --}}
-    <a href="/" class="flex items-center justify-center mb-8">
+    <a href="{{ url('/') }}" class="flex items-center justify-center mb-8">
         <img src="{{ asset('images/logo.png') }}" class="h-16 w-auto" alt="StudyAide logo" />
     </a>
 
