@@ -444,7 +444,11 @@ $getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use
 
         $institutionValues = array_filter(str_getcsv($institutionLine), fn ($value) => trim((string) $value) !== '');
         $csvBaseName = pathinfo($csvPath, PATHINFO_FILENAME);
-        $providerKey = $normalizeCollegeKey($csvBaseName);
+        $providerKeyFromFile = $normalizeCollegeKey($csvBaseName);
+        $providerKeyFromInstitution = $normalizeCollegeKey((string) ($institutionValues[0] ?? ''));
+        $providerKey = isset($collegeMetadata[$providerKeyFromInstitution])
+            ? $providerKeyFromInstitution
+            : $providerKeyFromFile;
         $metadata = $collegeMetadata[$providerKey] ?? [];
         $providerNameFromCsv = trim((string) ($institutionValues[0] ?? ''));
         $providerName = trim((string) ($metadata['college'] ?? ($institutionValues[0] ?? $csvBaseName)));
