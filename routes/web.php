@@ -701,7 +701,8 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
     if ($type === 'vet') {
         $csvPaths = $getVetCsvFiles();
         $collegeMetadata = $getCollegeMetadata();
-        $courses = $getVetCoursesFromCsvPaths($csvPaths, $collegeMetadata);
+        $allCourses = $getVetCoursesFromCsvPaths($csvPaths, $collegeMetadata);
+        $courses = $allCourses;
 
         $providerFilters = $splitQueryValues($request, 'inst', 'p');
         if ($providerFilters !== []) {
@@ -766,17 +767,13 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
             ];
         }
 
+        // Build provider groups from ALL courses (not filtered) to show all providers in sidebar
         $providerGroups = [];
-        $fieldOfStudyGroups = [];
-        $feeGroups = [];
-        $startMonthGroups = [];
-        foreach ($courses as $course) {
+        foreach ($allCourses as $course) {
             $providerKey = (string) ($course['providerKey'] ?? '');
-
             if ($providerKey === '') {
                 continue;
             }
-
             if (!isset($providerGroups[$providerKey])) {
                 $providerGroups[$providerKey] = [
                     'key' => $providerKey,
@@ -784,9 +781,14 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
                     'count' => 0,
                 ];
             }
-
             $providerGroups[$providerKey]['count']++;
+        }
 
+        // Build other filter groups from filtered courses
+        $fieldOfStudyGroups = [];
+        $feeGroups = [];
+        $startMonthGroups = [];
+        foreach ($courses as $course) {
             foreach ((array) ($course['fieldOfStudy'] ?? []) as $areaKey) {
                 if (!isset($fieldOfStudyGroups[$areaKey])) {
                     $fieldOfStudyGroups[$areaKey] = [
