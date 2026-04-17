@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Application;
+use App\Models\User;
 use App\Support\BcApplicationForm;
 use App\Support\CollegeApplicationForm;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class ApplicationController extends Controller
@@ -73,7 +75,7 @@ class ApplicationController extends Controller
 
         try {
             $application = Application::create([
-                'user_id' => auth()->id(),
+                'user_id' => Auth::id(),
                 'course_id' => $courseId,
                 'course_name' => Str::limit($courseName, 250, ''),
                 'form_data' => $formData,
@@ -97,9 +99,7 @@ class ApplicationController extends Controller
      */
     public function success(Application $application)
     {
-        if ($application->user_id !== auth()->id() && ! auth()->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorizeApplicationAccess($application);
 
         return view('application-success', compact('application'));
     }
@@ -109,9 +109,7 @@ class ApplicationController extends Controller
      */
     public function viewPdf(Application $application)
     {
-        if ($application->user_id !== auth()->id() && ! auth()->user()->isAdmin()) {
-            abort(403);
-        }
+        $this->authorizeApplicationAccess($application);
 
         return view('application-pdf', array_merge(
             ['application' => $application],
@@ -260,8 +258,26 @@ class ApplicationController extends Controller
 
     private function authorizeAdmin()
     {
-        if (! auth()->check() || ! auth()->user()->isAdmin()) {
+        $user = Auth::user();
+
+        if (! $user instanceof User || ! $user->isAdmin()) {
             abort(403, 'Unauthorized access');
+        }
+    }
+
+    private function authorizeApplicationAccess(Application $application): void
+    {
+        $user = Auth::user();
+
+        if (! $user instanceof User) {
+            abort(403);
+        }
+
+        $isOwner = $application->user_id !== null
+            && (int) $application->user_id === (int) $user->getAuthIdentifier();
+
+        if (! $isOwner && ! $user->isAdmin()) {
+            abort(403);
         }
     }
 
