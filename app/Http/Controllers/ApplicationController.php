@@ -81,7 +81,9 @@ class ApplicationController extends Controller
                 'submitted_at' => now(),
             ]);
 
-            return redirect(request()->getBaseUrl().route('application.success', $application->id, false))
+            return redirect()->to($this->normalizePublicPath(
+                route('application.success', $application->id)
+            ))
                 ->with('success', 'Application submitted successfully!');
         } catch (\Exception $e) {
             return back()
@@ -296,5 +298,10 @@ class ApplicationController extends Controller
         return is_array($formData)
             && ! isset($formData['form_template'])
             && array_key_exists('selected_courses', $formData);
+    }
+
+    private function normalizePublicPath(string $url): string
+    {
+        return preg_replace('#/public(?:/public)+#', '/public', $url) ?? $url;
     }
 }
