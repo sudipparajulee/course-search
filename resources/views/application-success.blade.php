@@ -50,13 +50,13 @@
 
             <!-- Action Buttons -->
             <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:gap-4">
-                <a href="{{ route('application.pdf', $application) }}" class="inline-flex items-center justify-center rounded-lg bg-[#2ca5b8] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#238a9b] focus:outline-none focus:ring-2 focus:ring-[#2ca5b8] focus:ring-offset-2">
+                <a href="{{ request()->getBaseUrl().route('application.pdf', $application, false) }}" class="inline-flex items-center justify-center rounded-lg bg-[#2ca5b8] px-6 py-2.5 text-sm font-semibold text-white hover:bg-[#238a9b] focus:outline-none focus:ring-2 focus:ring-[#2ca5b8] focus:ring-offset-2">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
                     </svg>
                     View Application
                 </a>
-                <a href="{{ route('search') }}" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2">
+                <a href="{{ request()->getBaseUrl().route('search', [], false) }}" class="inline-flex items-center justify-center rounded-lg border border-slate-300 px-6 py-2.5 text-sm font-semibold text-slate-900 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:ring-offset-2">
                     <svg class="mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>

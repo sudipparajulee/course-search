@@ -81,7 +81,7 @@ class ApplicationController extends Controller
                 'submitted_at' => now(),
             ]);
 
-            return redirect()->route('application.success', $application->id)
+            return redirect(request()->getBaseUrl().route('application.success', $application->id, false))
                 ->with('success', 'Application submitted successfully!');
         } catch (\Exception $e) {
             return back()
