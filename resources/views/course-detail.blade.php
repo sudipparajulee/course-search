@@ -69,9 +69,15 @@ document.addEventListener('DOMContentLoaded', () => {
         campus: @json(url('/api/course-search/campus')),
         applyInfo: @json(url('/api/course-search/apply-info')),
         vetColleges: @json(url('/api/course-search/vet/colleges')),
+        applyPage: @json(url('/apply')),
+        applyClosed: @json(route('apply.closed')),
+        login: @json(route('login')),
         search: @json($searchPagePath),
         home: @json(url('/')),
     };
+    const mirroredVetProviderKeys = @json(\App\Support\CollegeApplicationForm::mirroredProviderKeys());
+    const mirroredVetProviderPdfUrls = @json(\App\Support\CollegeApplicationForm::mirroredProviderPdfUrls());
+    const isAuthenticated = @json(auth()->check());
 
     const app = document.getElementById('course-detail-app');
     const dateFormatter = new Intl.DateTimeFormat('en-GB', {
@@ -345,9 +351,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const logoSourceUrl = sanitizeUrl(course.logoSourceUrl || '');
         const logoFallbackUrl = sanitizeUrl(course.logoFallbackUrl || '');
         const websiteUrl = sanitizeUrl(course.websiteUrl || '');
-        const applyUrl = sanitizeUrl(course.applyFormLink || '/apply');
-        const applyTarget = applyUrl.startsWith('http') ? '_blank' : '_self';
-        const applyRel = applyUrl.startsWith('http') ? 'noreferrer' : '';
+        const providerKey = String(course.providerKey || '').toLowerCase();
+        const applyPdfUrl = sanitizeUrl(mirroredVetProviderPdfUrls[providerKey] || course.applyFormLink || '');
+        const mirroredApplyUrl = `${endpoints.applyPage}?${new URLSearchParams({
+            provider: course.providerKey || '',
+            provider_name: course.providerName || '',
+            course: course.id || '',
+            course_name: title,
+        }).toString()}`;
+        const usesMirroredForm = mirroredVetProviderKeys.includes(providerKey);
+        const applyNowUrl = usesMirroredForm
+            ? mirroredApplyUrl
+            : sanitizeUrl(course.applyFormLink || course.websiteUrl || '#');
+        const applyTarget = usesMirroredForm ? '_self' : '_blank';
+        const applyRel = usesMirroredForm ? '' : 'noreferrer';
         const logoBgClass = course.providerKey === 'mit'
             ? 'bg-[#0f4d92]'
             : (course.providerKey === 'igi' ? 'bg-black' : 'bg-white');
@@ -358,14 +375,14 @@ document.addEventListener('DOMContentLoaded', () => {
         document.title = `${title} | Course detail`;
 
         app.innerHTML = `
-            <div class="space-y-8">
+            <div>
                 <nav class="flex flex-wrap items-center gap-3 text-[1rem] font-medium text-slate-700">
                     <a href="${endpoints.home}" class="underline underline-offset-4 hover:text-slate-900">Home</a>
                     <span>&gt;</span>
                     <a href="${endpoints.search}" class="underline underline-offset-4 hover:text-slate-900">${escapeHtml(currentSearchTypeLabel)} courses</a>
                 </nav>
 
-                <section class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+                <section class="mt-8 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
                     <div>
                         <h1 class="text-[2rem] font-semibold leading-tight text-slate-900 sm:text-[2.35rem]">${escapeHtml(title)}</h1>
                         <div class="mt-4 flex flex-wrap items-center gap-4 text-[0.95rem] text-slate-600">
@@ -420,18 +437,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     ` : ''}
                 </section>
 
-                <div class="grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
+                <div class="mt-8 grid gap-8 lg:grid-cols-[280px_minmax(0,1fr)]">
                     <aside class="self-start lg:sticky lg:top-6">
                         <div class="space-y-5 rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
-                            <a
-                                href="${escapeHtml(applyUrl)}"
-                                target="${escapeHtml(applyTarget)}"
-                                rel="${escapeHtml(applyRel)}"
+                            <button
+                                type="button"
+                                data-open-apply-modal="1"
                                 class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1a3a5c] px-5 py-4 text-[1rem] font-semibold text-white shadow-sm transition hover:bg-[#2ca5b8]"
                             >
                                 <svg class='h-5 w-5' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2'><path d='M12 20h9'/><path d='M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z'/></svg>
                                 Apply now
-                            </a>
+                            </button>
 
                             <a
                                 href="${endpoints.search}"
@@ -447,8 +463,94 @@ document.addEventListener('DOMContentLoaded', () => {
                         <!-- No additional content sections for VET courses -->
                     </div>
                 </div>
+
+                <div id="applyModal" class="fixed inset-0 z-[100] hidden items-center justify-center bg-slate-900/60 px-4 backdrop-blur-sm">
+                    <div class="w-full max-w-lg rounded-[28px] bg-white p-6 shadow-2xl ring-1 ring-slate-200 sm:p-8">
+                        <div class="flex items-start justify-between gap-4">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.25em] text-[#2ca5b8]">Apply now</p>
+                                <h2 class="mt-2 text-2xl font-semibold text-slate-900">${escapeHtml(title)}</h2>
+                                <p class="mt-2 text-sm leading-6 text-slate-500">Choose how you want to continue your application.</p>
+                            </div>
+                            <button type="button" data-close-apply-modal="1" class="rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700" aria-label="Close application modal">
+                                <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6 6 18M6 6l12 12"></path></svg>
+                            </button>
+                        </div>
+
+                        <div class="mt-6 grid gap-3 ${usesMirroredForm && applyPdfUrl ? 'sm:grid-cols-2' : ''}">
+                            ${usesMirroredForm && applyPdfUrl ? `
+                                <a
+                                    href="${escapeHtml(applyPdfUrl)}"
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    class="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-4 text-sm font-semibold text-slate-700 transition hover:border-[#2ca5b8] hover:text-[#1a3a5c]"
+                                >
+                                    <svg class="h-4 w-4 text-[#2ca5b8]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h9l5 5v15H6z"></path><path d="M14 2v6h6"></path></svg>
+                                    View PDF
+                                </a>
+                            ` : ''}
+
+                            <a
+                                href="${escapeHtml(applyNowUrl)}"
+                                target="${escapeHtml(applyTarget)}"
+                                rel="${escapeHtml(applyRel)}"
+                                class="inline-flex items-center justify-center gap-2 rounded-xl bg-[#1a3a5c] px-5 py-4 text-sm font-semibold text-white transition hover:bg-[#2ca5b8]"
+                            >
+                                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                Apply Online
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         `;
+
+        const modal = app.querySelector('#applyModal');
+        const openModalButton = app.querySelector('[data-open-apply-modal="1"]');
+        const closeModalButton = app.querySelector('[data-close-apply-modal="1"]');
+
+        const closeModal = () => {
+            if (!modal) {
+                return;
+            }
+
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+            document.documentElement.classList.remove('overflow-hidden');
+            document.body.classList.remove('overflow-hidden');
+        };
+
+        if (openModalButton && modal) {
+            openModalButton.addEventListener('click', () => {
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+                document.documentElement.classList.add('overflow-hidden');
+                document.body.classList.add('overflow-hidden');
+            });
+        }
+
+        if (closeModalButton) {
+            closeModalButton.addEventListener('click', closeModal);
+        }
+
+        if (modal) {
+            modal.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        }
+
+        window.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        window.addEventListener('beforeunload', () => {
+            document.documentElement.classList.remove('overflow-hidden');
+            document.body.classList.remove('overflow-hidden');
+        });
     }
 
     function renderDetailsPage(payload, campusMap) {
@@ -460,9 +562,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const providerName = normalizeText(course.providerName || courseDoc.providerName || '');
         const providerId = course.providerId || courseDoc.providerId || '';
         const logo = getLogoUrl(providerId, course.providerLogo);
-        const applyUrl = sanitizeUrl(course.applyFormLink || '/apply');
-        const applyTarget = applyUrl.startsWith('http') ? '_blank' : '_self';
-        const applyRel = applyUrl.startsWith('http') ? 'noreferrer' : '';
+        const applyUrl = endpoints.applyClosed;
+        const applyTarget = '_self';
+        const applyRel = '';
         const feeNote = course.feeNote || '';
 
         // Custom rendering for VET courses

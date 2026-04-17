@@ -1,10 +1,11 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
 
 $splitQueryValues = function (Request $request, string ...$keys): array {
     $values = [];
@@ -132,7 +133,7 @@ $forwardJson = function (string $url) {
             ->get($url);
 
         return response()->json($response->json(), $response->status());
-    } catch (\Throwable $exception) {
+    } catch (Throwable $exception) {
         return response()->json([
             'message' => 'Failed to reach the UAC course search service.',
             'error' => $exception->getMessage(),
@@ -173,7 +174,7 @@ $parseVetFeeAmount = function (?string $value): ?float {
         return null;
     }
 
-    if (!preg_match('/-?\d+(?:\.\d+)?/', str_replace(',', '', $text), $matches)) {
+    if (! preg_match('/-?\d+(?:\.\d+)?/', str_replace(',', '', $text), $matches)) {
         return null;
     }
 
@@ -298,7 +299,7 @@ $getVetIntakeMonths = function (?string $text): array {
 $getVetCsvFiles = function (): array {
     return array_filter(
         glob(public_path('*.csv')) ?: [],
-        fn (string $path): bool => !in_array(basename($path), ['vet.csv', 'website.csv'], true)
+        fn (string $path): bool => ! in_array(basename($path), ['vet.csv', 'website.csv'], true)
     );
 };
 
@@ -332,7 +333,7 @@ $extractWebsiteHost = function (?string $websiteUrl): ?string {
 
     $host = parse_url($url, PHP_URL_HOST);
 
-    if (!is_string($host) || $host === '') {
+    if (! is_string($host) || $host === '') {
         return null;
     }
 
@@ -370,7 +371,7 @@ $getCollegeMetadata = function () use ($normalizeCollegeKey, $buildLogoFromWebsi
         'britts' => 'https://brittscollege.edu.au/wp-content/uploads/2024/03/Britts-Logo.webp',
     ];
 
-    if (!file_exists($websitePath)) {
+    if (! file_exists($websitePath)) {
         return $mappings;
     }
 
@@ -439,6 +440,7 @@ $getVetCoursesFromCsvPaths = function (array $paths, array $collegeMetadata) use
         $institutionLine = fgets($csvFile);
         if ($institutionLine === false) {
             fclose($csvFile);
+
             continue;
         }
 
@@ -532,22 +534,27 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\FrontendController;
 
-Route::get('/',[FrontendController::class, 'home'])->name('home');
-
-
+Route::get('/', [FrontendController::class, 'home'])->name('home');
 
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.submit');
 
-Route::get('/apply', function () {
-    return view('apply-closed');
-});
+Route::get('/apply', [ApplicationController::class, 'show'])
+    ->middleware('auth')
+    ->name('apply');
 
+Route::view('/apply-closed', 'apply-closed')->name('apply.closed');
 
 Route::get('/search', function (Request $request) use ($courseSearchPath) {
     $queryString = $request->getQueryString();
 
     return redirect($courseSearchPath('international').($queryString ? '?'.$queryString : ''));
-});
+})->name('search');
+
+Route::get('/dashboard', function () {
+    return auth()->user()?->isAdmin()
+        ? redirect()->route('admin.dashboard')
+        : redirect()->route('home');
+})->middleware('auth')->name('dashboard');
 
 foreach ($courseSearchTypes as $type => $config) {
     Route::get('/course-search/search/'.$config['page_slug'], function () use ($type, $config, $courseSearchTypeMeta) {
@@ -607,7 +614,7 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
         // Filter by search query if provided
         $search = trim((string) $request->query('search', $request->query('query', '')));
         if ($search !== '') {
-            $courses = array_filter($courses, function($course) use ($search) {
+            $courses = array_filter($courses, function ($course) use ($search) {
                 return stripos($course['title'], $search) !== false ||
                        stripos($course['courseCode'], $search) !== false;
             });
@@ -617,7 +624,7 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
         $level = $request->query('level');
         if ($level) {
             $levelArray = is_array($level) ? $level : [$level];
-            $courses = array_filter($courses, function($course) use ($levelArray) {
+            $courses = array_filter($courses, function ($course) use ($levelArray) {
                 return in_array((string) ($course['categoryKey'] ?? ''), $levelArray, true);
             });
         }
@@ -626,6 +633,7 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
         if ($fosFilters !== []) {
             $courses = array_filter($courses, function (array $course) use ($fosFilters): bool {
                 $areas = is_array($course['fieldOfStudy'] ?? null) ? $course['fieldOfStudy'] : [];
+
                 return count(array_intersect($areas, $fosFilters)) > 0;
             });
         }
@@ -641,6 +649,7 @@ Route::get('/api/course-search', function (Request $request) use ($resolveCourse
         if ($startFilters !== []) {
             $courses = array_filter($courses, function (array $course) use ($startFilters): bool {
                 $months = is_array($course['intakeMonths'] ?? null) ? $course['intakeMonths'] : [];
+
                 return count(array_intersect($months, $startFilters)) > 0;
             });
         }
@@ -730,6 +739,7 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
         if ($fosFilters !== []) {
             $courses = array_filter($courses, function (array $course) use ($fosFilters): bool {
                 $areas = is_array($course['fieldOfStudy'] ?? null) ? $course['fieldOfStudy'] : [];
+
                 return count(array_intersect($areas, $fosFilters)) > 0;
             });
         }
@@ -745,14 +755,15 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
         if ($startFilters !== []) {
             $courses = array_filter($courses, function (array $course) use ($startFilters): bool {
                 $months = is_array($course['intakeMonths'] ?? null) ? $course['intakeMonths'] : [];
+
                 return count(array_intersect($months, $startFilters)) > 0;
             });
         }
 
         $categories = [];
-        foreach ($courses as $course) {
+        foreach ($allCourses as $course) {
             $category = $course['category'];
-            if (!isset($categories[$category])) {
+            if (! isset($categories[$category])) {
                 $categories[$category] = 0;
             }
             $categories[$category]++;
@@ -774,7 +785,7 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
             if ($providerKey === '') {
                 continue;
             }
-            if (!isset($providerGroups[$providerKey])) {
+            if (! isset($providerGroups[$providerKey])) {
                 $providerGroups[$providerKey] = [
                     'key' => $providerKey,
                     'name' => (string) ($course['providerName'] ?? $providerKey),
@@ -790,7 +801,7 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
         $startMonthGroups = [];
         foreach ($courses as $course) {
             foreach ((array) ($course['fieldOfStudy'] ?? []) as $areaKey) {
-                if (!isset($fieldOfStudyGroups[$areaKey])) {
+                if (! isset($fieldOfStudyGroups[$areaKey])) {
                     $fieldOfStudyGroups[$areaKey] = [
                         'key' => $areaKey,
                         'name' => $getVetAreaLabel($areaKey),
@@ -809,7 +820,7 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
                     'variable' => 'Variable / Per level',
                 ];
 
-                if (!isset($feeGroups[$feeKey])) {
+                if (! isset($feeGroups[$feeKey])) {
                     $feeGroups[$feeKey] = [
                         'key' => $feeKey,
                         'name' => $feeNames[$feeKey] ?? $feeKey,
@@ -820,7 +831,7 @@ Route::get('/api/course-search/filters', function (Request $request) use ($resol
             }
 
             foreach ((array) ($course['intakeMonths'] ?? []) as $monthKey) {
-                if (!isset($startMonthGroups[$monthKey])) {
+                if (! isset($startMonthGroups[$monthKey])) {
                     $startMonthGroups[$monthKey] = [
                         'key' => $monthKey,
                         'count' => 0,
@@ -894,7 +905,7 @@ Route::get('/api/course-search/vet/colleges', function (Request $request) use ($
             continue;
         }
 
-        if (!isset($colleges[$providerKey])) {
+        if (! isset($colleges[$providerKey])) {
             $colleges[$providerKey] = [
                 'providerKey' => $providerKey,
                 'providerName' => (string) ($course['providerName'] ?? $providerKey),
@@ -914,7 +925,7 @@ Route::get('/api/course-search/vet/colleges', function (Request $request) use ($
         $categoryName = (string) ($course['category'] ?? 'Other');
         $categoryKey = (string) ($course['categoryKey'] ?? strtolower(str_replace(' ', '_', $categoryName)));
 
-        if (!isset($colleges[$providerKey]['categories'][$categoryKey])) {
+        if (! isset($colleges[$providerKey]['categories'][$categoryKey])) {
             $colleges[$providerKey]['categories'][$categoryKey] = [
                 'key' => $categoryKey,
                 'name' => $categoryName,
@@ -944,7 +955,7 @@ Route::get('/api/course-search/logo/{provider}', function (string $provider) use
     $providerKey = $normalizeCollegeKey($provider);
     $metadata = $getCollegeMetadata()[$providerKey] ?? null;
 
-    if (!is_array($metadata)) {
+    if (! is_array($metadata)) {
         return response('', 404);
     }
 
@@ -993,7 +1004,7 @@ Route::get('/api/course-search/logo/{provider}', function (string $provider) use
 
         $contentType = strtolower((string) $response->header('Content-Type', ''));
 
-        if ((!$response->successful() || !str_starts_with($contentType, 'image/')) && $fallbackUrl !== '' && $targetUrl !== $fallbackUrl) {
+        if ((! $response->successful() || ! str_starts_with($contentType, 'image/')) && $fallbackUrl !== '' && $targetUrl !== $fallbackUrl) {
             $response = Http::withHeaders($headers)
                 ->timeout(20)
                 ->retry(1, 200)
@@ -1001,18 +1012,18 @@ Route::get('/api/course-search/logo/{provider}', function (string $provider) use
             $contentType = strtolower((string) $response->header('Content-Type', ''));
         }
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return $redirectToUrl($targetUrl !== '' ? $targetUrl : $fallbackUrl);
         }
 
-        if (!str_starts_with($contentType, 'image/')) {
+        if (! str_starts_with($contentType, 'image/')) {
             return $redirectToUrl($targetUrl !== '' ? $targetUrl : $fallbackUrl);
         }
 
         return response($response->body(), 200)
             ->header('Content-Type', $contentType)
             ->header('Cache-Control', 'public, max-age=86400');
-    } catch (\Throwable $exception) {
+    } catch (Throwable $exception) {
         return $redirectToUrl($targetUrl !== '' ? $targetUrl : $fallbackUrl);
     }
 })->where('provider', '[A-Za-z0-9_-]+');
@@ -1095,7 +1106,7 @@ Route::get('/api/course-search/apply-info', function () {
             'canEmbed' => $frameOptions === '' ? null : $frameOptions !== 'SAMEORIGIN' && $frameOptions !== 'DENY',
             'xFrameOptions' => $frameOptions !== '' ? $frameOptions : null,
         ], 200);
-    } catch (\Throwable $exception) {
+    } catch (Throwable $exception) {
         return response()->json([
             'available' => false,
             'title' => 'Apply through UAC',
@@ -1116,14 +1127,26 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    // Application Routes
+    Route::post('/application/store', [ApplicationController::class, 'store'])->name('application.store');
+    Route::get('/application/{application}/success', [ApplicationController::class, 'success'])->name('application.success');
+    Route::get('/application/{application}/pdf', [ApplicationController::class, 'viewPdf'])->name('application.pdf');
+
     Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/',           [AdminController::class, 'dashboard'])->name('dashboard');
-        Route::get('/users',      [AdminController::class, 'users'])->name('users');
+        Route::get('/', [AdminController::class, 'dashboard'])->name('dashboard');
+        Route::get('/users', [AdminController::class, 'users'])->name('users');
         Route::get('/users/{user}/edit', [AdminController::class, 'editUser'])->name('users.edit');
         Route::put('/users/{user}', [AdminController::class, 'updateUser'])->name('users.update');
         Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('users.destroy');
-        Route::get('/contact',    [AdminController::class, 'contact'])->name('contact');
+        Route::get('/contact', [AdminController::class, 'contact'])->name('contact');
         Route::delete('/contact/{contact}', [AdminController::class, 'destroy'])->name('contact.destroy');
+
+        // Applications
+        Route::get('/applications', [ApplicationController::class, 'adminList'])->name('applications.list');
+        Route::get('/applications/{application}', [ApplicationController::class, 'adminView'])->name('applications.view');
+        Route::put('/applications/{application}/status', [ApplicationController::class, 'adminUpdateStatus'])->name('applications.update-status');
+        Route::get('/applications/{application}/pdf', [ApplicationController::class, 'adminExportPdf'])->name('applications.pdf');
+        Route::delete('/applications/{application}', [ApplicationController::class, 'adminDestroy'])->name('applications.destroy');
     });
 });
 

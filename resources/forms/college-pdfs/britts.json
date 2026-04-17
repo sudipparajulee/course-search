@@ -1,0 +1,1933 @@
+{
+    "template_key": "britts",
+    "page_width": 595.276,
+    "page_height": 841.89,
+    "pages": [
+        {
+            "page": 1,
+            "image": "images/forms/britts/page-1.png"
+        },
+        {
+            "page": 2,
+            "image": "images/forms/britts/page-2.png"
+        },
+        {
+            "page": 3,
+            "image": "images/forms/britts/page-3.png"
+        },
+        {
+            "page": 4,
+            "image": "images/forms/britts/page-4.png"
+        },
+        {
+            "page": 5,
+            "image": "images/forms/britts/page-5.png"
+        }
+    ],
+    "fields": [
+        {
+            "key": "radio_button_payment",
+            "label": "Radio Button Payment",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                27.4985,
+                580.659,
+                40.7015,
+                593.862
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_payment_2",
+            "label": "Radio Button Payment",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                249.109,
+                580.659,
+                262.312,
+                593.862
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_2",
+            "label": "Text Field 2",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                489.974,
+                295.865,
+                506.39
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_title",
+            "label": "Radio Button title",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                60.999,
+                525.909,
+                74.202,
+                539.112
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_title_2",
+            "label": "Radio Button title",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                100.839,
+                525.909,
+                114.042,
+                539.112
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_title_3",
+            "label": "Radio Button title",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                144.639,
+                525.909,
+                157.842,
+                539.112
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_title_4",
+            "label": "Radio Button title",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                185.263,
+                525.909,
+                198.466,
+                539.112
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_title_5",
+            "label": "Radio Button title",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                224.071,
+                525.909,
+                237.274,
+                539.112
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_20",
+            "label": "Text Field 20",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                304.911,
+                489.974,
+                569.276,
+                506.39
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_21",
+            "label": "Text Field 21",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                455.355,
+                187.087,
+                471.771
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_gender",
+            "label": "Radio Button gender",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                199.267,
+                457,
+                212.47,
+                470.203
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_gender_2",
+            "label": "Radio Button gender",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                245.987,
+                457,
+                259.19,
+                470.203
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_23",
+            "label": "Text Field 23",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                420.736,
+                295.865,
+                437.152
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_24",
+            "label": "Text Field 24",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                305.148,
+                455.355,
+                569.276,
+                471.771
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_25",
+            "label": "Text Field 25",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                305.148,
+                420.736,
+                569.276,
+                437.152
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_26",
+            "label": "Text Field 26",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                371.387,
+                569.276,
+                387.803
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_27",
+            "label": "Text Field 27",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                335.452,
+                295.865,
+                351.868
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_28",
+            "label": "Text Field 28",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                305.148,
+                335.452,
+                569.512,
+                351.868
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_29",
+            "label": "Text Field 29",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                299.517,
+                569.276,
+                315.933
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_31",
+            "label": "Text Field 31",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                263.582,
+                295.865,
+                279.998
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_32",
+            "label": "Text Field 32",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                305.148,
+                263.582,
+                569.512,
+                279.998
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_33",
+            "label": "Text Field 33",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                214.234,
+                569.276,
+                230.65
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_34",
+            "label": "Text Field 34",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                142.364,
+                569.276,
+                158.78
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_35",
+            "label": "Text Field 35",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                178.299,
+                295.865,
+                194.715
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_36",
+            "label": "Text Field 36",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                305.148,
+                178.299,
+                569.512,
+                194.715
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_37",
+            "label": "Text Field 37",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                31.5,
+                106.429,
+                295.865,
+                122.845
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_38",
+            "label": "Text Field 38",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                305.148,
+                106.429,
+                569.512,
+                122.845
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_campus",
+            "label": "Radio Button Campus",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                27.4985,
+                635.408,
+                40.7015,
+                648.611
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_campus_2",
+            "label": "Radio Button Campus",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                124.485,
+                635.408,
+                137.688,
+                648.611
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "button_2",
+            "label": "Button 2",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                520.157,
+                805.192,
+                559.843,
+                825.238
+            ],
+            "field_type": "/Btn",
+            "field_flags": 65536
+        },
+        {
+            "key": "text_field_56",
+            "label": "Text Field 56",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                768.447,
+                295.865,
+                784.863
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_60",
+            "label": "Text Field 60",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                728.26,
+                295.865,
+                744.676
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_61",
+            "label": "Text Field 61",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                305.148,
+                728.26,
+                569.512,
+                744.676
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_72",
+            "label": "Text Field 72",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                305.148,
+                768.447,
+                569.512,
+                784.863
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_75",
+            "label": "Text Field 75",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                647.284,
+                569.512,
+                663.7
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_1",
+            "label": "Radio Button 1",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                304.793,
+                687.471,
+                317.996,
+                700.674
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_1_2",
+            "label": "Radio Button 1",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                351.513,
+                687.471,
+                364.716,
+                700.674
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_77",
+            "label": "Text Field 77",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                575.56,
+                295.865,
+                591.976
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_78",
+            "label": "Text Field 78",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                304.911,
+                575.56,
+                569.276,
+                591.976
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_79",
+            "label": "Text Field 79",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                434.506,
+                569.276,
+                450.922
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_93",
+            "label": "Text Field 93",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                536.688,
+                295.865,
+                553.104
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_96",
+            "label": "Text Field 96",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                304.793,
+                536.688,
+                569.276,
+                553.104
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_97",
+            "label": "Text Field 97",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                497.817,
+                188.976,
+                514.233
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_98",
+            "label": "Text Field 98",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                372.283,
+                497.817,
+                569.512,
+                514.233
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_99",
+            "label": "Text Field 99",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                196.157,
+                497.817,
+                365.669,
+                514.233
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_2",
+            "label": "Radio Button 2",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                304.793,
+                474.693,
+                317.996,
+                487.896
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_2_2",
+            "label": "Radio Button 2",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                351.513,
+                474.693,
+                364.716,
+                487.896
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_3",
+            "label": "Radio Button 3",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.5,
+                400.939,
+                44.703,
+                414.142
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_3_2",
+            "label": "Radio Button 3",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                99.8516,
+                400.939,
+                113.055,
+                414.142
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_3_3",
+            "label": "Radio Button 3",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                202.475,
+                400.939,
+                215.678,
+                414.142
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_3_4",
+            "label": "Radio Button 3",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                270.827,
+                400.939,
+                284.03,
+                414.142
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_4",
+            "label": "Radio Button 4",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.5,
+                363.507,
+                44.703,
+                376.71
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_4_2",
+            "label": "Radio Button 4",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                78.2199,
+                363.507,
+                91.4229,
+                376.71
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_101",
+            "label": "Text Field 101",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                327.763,
+                295.865,
+                344.179
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_5",
+            "label": "Radio Button 5",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                305.148,
+                363.507,
+                318.351,
+                376.71
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_5_2",
+            "label": "Radio Button 5",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                351.868,
+                363.507,
+                365.07,
+                376.71
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_102",
+            "label": "Text Field 102",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                305.148,
+                327.763,
+                569.512,
+                344.179
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_115",
+            "label": "Text Field 115",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                31.5,
+                164.947,
+                295.865,
+                181.363
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_6",
+            "label": "Radio Button 6",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.5,
+                186.487,
+                44.703,
+                199.69
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_6_2",
+            "label": "Radio Button 6",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                99.6252,
+                186.487,
+                112.828,
+                199.69
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_133",
+            "label": "Text Field 133",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                305.148,
+                164.947,
+                569.512,
+                181.363
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_7",
+            "label": "Radio Button 7",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                305.148,
+                186.487,
+                318.351,
+                199.69
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_7_2",
+            "label": "Radio Button 7",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                349.713,
+                186.487,
+                362.916,
+                199.69
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_8",
+            "label": "Radio Button 8",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                187.087,
+                141.823,
+                200.29,
+                155.026
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_8_2",
+            "label": "Radio Button 8",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                306.545,
+                141.823,
+                319.748,
+                155.026
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_8_3",
+            "label": "Radio Button 8",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                255.916,
+                141.823,
+                269.119,
+                155.026
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_8_4",
+            "label": "Radio Button 8",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                374.038,
+                141.823,
+                387.241,
+                155.026
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_135",
+            "label": "Text Field 135",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                187.087,
+                101.636,
+                569.512,
+                118.052
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_9",
+            "label": "Radio Button 9",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.5,
+                103.242,
+                44.703,
+                116.445
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_9_2",
+            "label": "Radio Button 9",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                76.0654,
+                103.242,
+                89.2684,
+                116.445
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "check_box_6",
+            "label": "Check Box 6",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.25,
+                278.229,
+                41.0689,
+                288.048
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_7",
+            "label": "Check Box 7",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.25,
+                264.623,
+                41.0689,
+                274.442
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_8",
+            "label": "Check Box 8",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                31.25,
+                251.016,
+                41.0689,
+                260.835
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_10",
+            "label": "Radio Button 10",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                308.674,
+                782.393,
+                321.877,
+                795.596
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_10_2",
+            "label": "Radio Button 10",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                355.394,
+                782.393,
+                368.597,
+                795.596
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_141",
+            "label": "Text Field 141",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                31.5,
+                744.939,
+                251.493,
+                761.355
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_142",
+            "label": "Text Field 142",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                259.855,
+                744.939,
+                496.661,
+                761.355
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_143",
+            "label": "Text Field 143",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                505.024,
+                744.939,
+                569.276,
+                761.355
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_11",
+            "label": "Radio Button 11",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                308.674,
+                723.232,
+                321.877,
+                736.435
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_11_2",
+            "label": "Radio Button 11",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                355.394,
+                723.232,
+                368.597,
+                736.435
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_12",
+            "label": "Radio Button 12",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                308.674,
+                685.278,
+                321.877,
+                698.481
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_12_2",
+            "label": "Radio Button 12",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                396.615,
+                685.278,
+                409.818,
+                698.481
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_13",
+            "label": "Radio Button 13",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.25,
+                645.716,
+                44.453,
+                658.919
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_13_2",
+            "label": "Radio Button 13",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                310.038,
+                645.716,
+                323.241,
+                658.919
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_153",
+            "label": "Text Field 153",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                131.558,
+                644.11,
+                295.865,
+                660.526
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_154",
+            "label": "Text Field 154",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                31.5,
+                561.608,
+                112.907,
+                578.024
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_157",
+            "label": "Text Field 157",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                121.181,
+                561.608,
+                202.589,
+                578.024
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_158",
+            "label": "Text Field 158",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                210.32,
+                561.608,
+                291.728,
+                578.024
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_159",
+            "label": "Text Field 159",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                300.002,
+                561.608,
+                569.276,
+                578.024
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_162",
+            "label": "Text Field 162",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                31.5,
+                524.154,
+                569.276,
+                540.57
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_14",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.5,
+                457.122,
+                44.703,
+                470.325
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_14_2",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                347.225,
+                457.122,
+                360.428,
+                470.325
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_14_3",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                188.247,
+                457.122,
+                201.45,
+                470.325
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_14_4",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                474.049,
+                457.122,
+                496.863,
+                470.325
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_14_5",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.5,
+                435.415,
+                44.703,
+                448.618
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_14_6",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                188.247,
+                435.415,
+                201.45,
+                448.618
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_14_7",
+            "label": "Radio Button 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                347.225,
+                435.415,
+                360.428,
+                448.618
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "combo_box_6",
+            "label": "Combo Box 6",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                31.25,
+                240.526,
+                241.5,
+                256.942
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "combo_box_18",
+            "label": "Combo Box 18",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                259.495,
+                83.1172,
+                351.579,
+                99.5332
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "check_box_9",
+            "label": "Check Box 9",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.25,
+                369.126,
+                41.0689,
+                378.945
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_10",
+            "label": "Check Box 10",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.25,
+                355.52,
+                41.0689,
+                365.339
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_11",
+            "label": "Check Box 11",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.25,
+                341.914,
+                41.0689,
+                351.733
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_12",
+            "label": "Check Box 12",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.25,
+                328.308,
+                41.0689,
+                338.126
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_13",
+            "label": "Check Box 13",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                31.25,
+                314.701,
+                41.0689,
+                324.52
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_14",
+            "label": "Check Box 14",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                347.225,
+                369.126,
+                357.044,
+                378.945
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_15",
+            "label": "Check Box 15",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                347.225,
+                355.52,
+                357.044,
+                365.339
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_16",
+            "label": "Check Box 16",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                347.225,
+                341.914,
+                357.044,
+                351.733
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_17",
+            "label": "Check Box 17",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                347.225,
+                328.308,
+                357.044,
+                338.126
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_209",
+            "label": "Text Field 209",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                389.738,
+                83.1172,
+                430.249,
+                99.5332
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_210",
+            "label": "Text Field 210",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                250.114,
+                240.526,
+                343.657,
+                256.942
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_211",
+            "label": "Text Field 211",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                358.117,
+                240.526,
+                451.66,
+                256.942
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_212",
+            "label": "Text Field 212",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                466.122,
+                240.526,
+                559.665,
+                256.942
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "combo_box_32",
+            "label": "Combo Box 32",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                97.7953,
+                218.172,
+                559.665,
+                234.587
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "combo_box_33",
+            "label": "Combo Box 33",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                97.7953,
+                195.818,
+                559.665,
+                212.233
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "combo_box_34",
+            "label": "Combo Box 34",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                97.7953,
+                173.463,
+                559.665,
+                189.879
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "combo_box_35",
+            "label": "Combo Box 35",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                97.7953,
+                151.109,
+                559.665,
+                167.524
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "combo_box_36",
+            "label": "Combo Box 36",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                97.7953,
+                128.755,
+                559.665,
+                145.17
+            ],
+            "field_type": "/Ch",
+            "field_flags": 4325376
+        },
+        {
+            "key": "radio_button_16",
+            "label": "Radio Button 16",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                355.173,
+                782.393,
+                368.376,
+                795.596
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_16_2",
+            "label": "Radio Button 16",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                401.893,
+                782.393,
+                415.096,
+                795.596
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_17",
+            "label": "Radio Button 17",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                355.173,
+                762.52,
+                368.376,
+                775.723
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_17_2",
+            "label": "Radio Button 17",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                401.893,
+                762.52,
+                415.096,
+                775.723
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_181",
+            "label": "Text Field 181",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                31.5,
+                727.9,
+                569.276,
+                744.316
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_18",
+            "label": "Radio Button 18",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                31.5,
+                648.697,
+                45.7076,
+                661.9
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_18_2",
+            "label": "Radio Button 18",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                480.189,
+                648.697,
+                493.392,
+                661.9
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_19",
+            "label": "Radio Button 19",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                355.173,
+                588.882,
+                368.376,
+                602.085
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_19_2",
+            "label": "Radio Button 19",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                401.893,
+                588.882,
+                415.096,
+                602.085
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_192",
+            "label": "Text Field 192",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                31.5,
+                551.428,
+                569.276,
+                567.844
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "radio_button_20",
+            "label": "Radio Button 20",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                355.173,
+                527.651,
+                368.376,
+                540.854
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "radio_button_20_2",
+            "label": "Radio Button 20",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                412.17,
+                527.651,
+                425.373,
+                540.854
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "text_field_199",
+            "label": "Text Field 199",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                31.5,
+                409.923,
+                295.865,
+                426.339
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_200",
+            "label": "Text Field 200",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                304.911,
+                409.923,
+                569.276,
+                426.339
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_201",
+            "label": "Text Field 201",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                31.5,
+                371.338,
+                569.276,
+                387.754
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_204",
+            "label": "Text Field 204",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                304.793,
+                239.88,
+                569.276,
+                256.296
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box_5",
+            "label": "Check Box 5",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                304.911,
+                350.332,
+                314.73,
+                360.151
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_208",
+            "label": "Text Field 208",
+            "type": "text",
+            "page": 5,
+            "rect": [
+                31.5,
+                139.579,
+                295.982,
+                155.995
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "text_field_2010",
+            "label": "Text Field 2010",
+            "type": "text",
+            "page": 5,
+            "rect": [
+                31.5,
+                100.63,
+                295.982,
+                117.046
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        }
+    ]
+}

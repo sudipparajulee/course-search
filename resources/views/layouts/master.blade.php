@@ -77,7 +77,7 @@
                 @else
                     <a href="{{ route('login') }}"
                        class="inline-flex items-center gap-2 whitespace-nowrap rounded-full bg-[#1a3a5c] px-5 py-2.5 text-[0.88rem] font-semibold text-white shadow-sm transition hover:bg-[#16304d]">
-                        <span>Apply / log in</span>
+                        <span>Apply / login</span>
                     </a>
                 @endauth
             </div>

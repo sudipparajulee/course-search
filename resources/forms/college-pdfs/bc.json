@@ -1,0 +1,1705 @@
+{
+    "template_key": "bc",
+    "page_width": 595.32,
+    "page_height": 841.92,
+    "pages": [
+        {
+            "page": 1,
+            "image": "images/forms/bc/page-1.png"
+        },
+        {
+            "page": 2,
+            "image": "images/forms/bc/page-2.png"
+        },
+        {
+            "page": 3,
+            "image": "images/forms/bc/page-3.png"
+        },
+        {
+            "page": 4,
+            "image": "images/forms/bc/page-4.png"
+        }
+    ],
+    "fields": [
+        {
+            "key": "start_dateddmmyy",
+            "label": "Start Dateddmmyy",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                181.32,
+                315.48,
+                282.36,
+                325.8
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "end_dateddmmyy",
+            "label": "End Dateddmmyy",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                454.8,
+                315.48,
+                555.84,
+                325.8
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "mr",
+            "label": "Mr",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                110.28,
+                273.12,
+                120.24,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "mrs",
+            "label": "Mrs",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                143.04,
+                273.12,
+                153,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "ms",
+            "label": "Ms",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                180.72,
+                273.12,
+                190.68,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "dr",
+            "label": "Dr",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                218.04,
+                273.12,
+                228,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "other",
+            "label": "Other",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                249.72,
+                273.12,
+                259.68,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "male",
+            "label": "Male",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                378.48,
+                273.12,
+                388.44,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "female",
+            "label": "Female",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                438,
+                273.12,
+                447.96,
+                279.72
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "other_2",
+            "label": "Other_2",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                507.36,
+                273.24,
+                517.32,
+                279.84
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "family_name_as_in_passport",
+            "label": "Family name as in passport",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                211.68,
+                255,
+                300.12,
+                265.2
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "given_names",
+            "label": "Given names",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                392.16,
+                254.64,
+                556.08,
+                264.96
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "date_of_birth_ddmmyy",
+            "label": "Date of Birth ddmmyy",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                211.2,
+                232.8,
+                300.12,
+                243.12
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "nationality_as_per_passport",
+            "label": "Nationality as per passport",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                451.44,
+                233.04,
+                556.08,
+                243.36
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "address",
+            "label": "Address",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                117.6,
+                188.04,
+                335.64,
+                198.24
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "country",
+            "label": "Country",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                381,
+                188.52,
+                436.32,
+                198.84
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "post_code",
+            "label": "Post Code",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                490.56,
+                188.52,
+                556.2,
+                198.84
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "telephone_mobile",
+            "label": "Telephone Mobile",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                165.72,
+                168.72,
+                291,
+                179.04
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "email",
+            "label": "Email",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                330,
+                171.72,
+                556.08,
+                182.04
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "address_2",
+            "label": "Address_2",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                120.24,
+                124.8,
+                333.24,
+                135.12
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "state",
+            "label": "State",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                370.08,
+                124.32,
+                435.6,
+                134.64
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "post_code_2",
+            "label": "Post Code_2",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                490.56,
+                123.36,
+                556.2,
+                133.68
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "telephone_mobile_2",
+            "label": "Telephone Mobile_2",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                165.48,
+                108,
+                290.76,
+                118.32
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "email_2",
+            "label": "Email_2",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                329.76,
+                107.88,
+                555.84,
+                118.2
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "name",
+            "label": "Name",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                115.44,
+                65.88,
+                300.24,
+                76.2
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "phone_number",
+            "label": "Phone Number",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                383.28,
+                66.48,
+                556.68,
+                77.88
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "address_3",
+            "label": "Address_3",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                125.28,
+                49.08,
+                300.12,
+                59.4
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "relationship_to_applicant",
+            "label": "Relationship to Applicant",
+            "type": "text",
+            "page": 1,
+            "rect": [
+                425.88,
+                49.08,
+                556.8,
+                59.4
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_0",
+            "label": "Check Box5.0",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                663.935,
+                85.3307,
+                673.106
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_1",
+            "label": "Check Box5.1",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                646.967,
+                85.3307,
+                656.138
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_2",
+            "label": "Check Box5.2",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                629.998,
+                85.3307,
+                639.169
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_3",
+            "label": "Check Box5.3",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                74.9635,
+                613.03,
+                85.3307,
+                622.201
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_5",
+            "label": "Check Box5.5",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                596.092,
+                85.3307,
+                605.264
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_7",
+            "label": "Check Box5.7",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                579.155,
+                85.3307,
+                588.326
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_8",
+            "label": "Check Box5.8",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                562.187,
+                85.3307,
+                571.358
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_11",
+            "label": "Check Box5.11",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                538.281,
+                85.3307,
+                547.452
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_12",
+            "label": "Check Box5.12",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                485.313,
+                85.3307,
+                494.484
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_13",
+            "label": "Check Box5.13",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                468.344,
+                85.3307,
+                477.515
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_14",
+            "label": "Check Box5.14",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                451.376,
+                85.3307,
+                460.547
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_15",
+            "label": "Check Box5.15",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                434.407,
+                85.3307,
+                443.578
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_16_0",
+            "label": "Check Box5.16.0",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                411.279,
+                85.3307,
+                420.45
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_16_1",
+            "label": "Check Box5.16.1",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                359.588,
+                85.3307,
+                368.759
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "check_box5_16_2",
+            "label": "Check Box5.16.2",
+            "type": "checkbox",
+            "page": 1,
+            "rect": [
+                75.3622,
+                342.898,
+                85.3307,
+                352.069
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "passport_number",
+            "label": "Passport Number",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                165.24,
+                712.2,
+                300.48,
+                722.52
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "expiry_date",
+            "label": "Expiry Date",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                395.88,
+                711.48,
+                555.96,
+                721.68
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "visa_type",
+            "label": "Visa Type",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                133.32,
+                696.24,
+                246.24,
+                706.56
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "subclass",
+            "label": "Subclass",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                302.16,
+                696.24,
+                336,
+                706.56
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "expiry_date_2",
+            "label": "Expiry Date_2",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                395.88,
+                696,
+                555.96,
+                706.32
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "tourist",
+            "label": "Tourist",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                327.72,
+                667.92,
+                337.68,
+                677.88
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "other_3",
+            "label": "Other_3",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                422.64,
+                667.92,
+                432.6,
+                677.88
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "student",
+            "label": "Student",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                111.36,
+                667.92,
+                121.32,
+                677.88
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "working_holiday",
+            "label": "Working Holiday",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                201.72,
+                669.92,
+                211.68,
+                679.88
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "have_you_applied_to_become_a_permanent_residence_of_australia",
+            "label": "Have you applied to become a permanent residence of Australia",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                401.52,
+                652.68,
+                411.48,
+                662.64
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "have_you_applied_to_become_a_permanent_residence_of_australia_2",
+            "label": "Have you applied to become a permanent residence of Australia",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                460.8,
+                652.68,
+                470.76,
+                662.64
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "if_yes_date_of_application_ddmmyy",
+            "label": "If yes date of application ddmmyy",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                252.48,
+                639.48,
+                387.6,
+                649.68
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "usi_number",
+            "label": "USI Number",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                148.08,
+                594.48,
+                283.2,
+                604.8
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "australia",
+            "label": "Australia",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                251.76,
+                518.4,
+                261.72,
+                525
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "other_please_specify",
+            "label": "Other  Please specify",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                325.68,
+                518.4,
+                335.64,
+                525
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "well",
+            "label": "Well",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                326.76,
+                458.28,
+                336.72,
+                464.88
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "undefined",
+            "label": "undefined",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                441.6,
+                516,
+                557.4,
+                526.32
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "no_2",
+            "label": "No_2",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                333.12,
+                490.8,
+                343.08,
+                497.4
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "very_well",
+            "label": "Very well",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                251.04,
+                458.28,
+                261,
+                464.88
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "not_well",
+            "label": "Not well",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                378.36,
+                456.24,
+                388.32,
+                462.84
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "not_at_all",
+            "label": "Not at all",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                449.04,
+                456.24,
+                459,
+                462.84
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "yes_please_specify",
+            "label": "Yes  Please specify",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                375.36,
+                490.8,
+                385.32,
+                497.4
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "yes_please_specify_2",
+            "label": "Yes  Please specify_2",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                375.36,
+                440.76,
+                385.32,
+                447.36
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "no_3",
+            "label": "No_3",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                375.36,
+                397.8,
+                385.32,
+                404.4
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "undefined_2",
+            "label": "undefined_2",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                483.6,
+                438.36,
+                557.4,
+                448.68
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "yes_2",
+            "label": "Yes_2",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                258.96,
+                399.84,
+                268.92,
+                406.44
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "highest_qualification",
+            "label": "Highest Qualification",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                180.6,
+                385.32,
+                428.52,
+                395.64
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "name_of_institute",
+            "label": "Name of Institute",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                168.24,
+                371.76,
+                348.72,
+                381.96
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "completed_year",
+            "label": "Completed Year",
+            "type": "text",
+            "page": 2,
+            "rect": [
+                431.88,
+                372.6,
+                557.4,
+                382.92
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "do_you_have_any_of_the_following_disabilities_impairments_or_longterm_conditions",
+            "label": "Do you have any of the following disabilities impairments or longterm conditions",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                462.96,
+                329.52,
+                472.92,
+                336.12
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "do_you_have_any_of_the_following_disabilities_impairments_or_longterm_conditions_2",
+            "label": "Do you have any of the following disabilities impairments or longterm conditions",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                523.44,
+                329.52,
+                533.4,
+                336.12
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "hearingdeaf",
+            "label": "HearingDeaf",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                110.4,
+                306.12,
+                119.4,
+                312.12
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "physical",
+            "label": "Physical",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                219.96,
+                306.12,
+                228.96,
+                312.12
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "intellectual",
+            "label": "Intellectual",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                305.04,
+                306.12,
+                314.04,
+                311.721
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "acquired_brain_impairment",
+            "label": "Acquired Brain Impairment",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                414.48,
+                306.12,
+                423.48,
+                312.12
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "mental_illness",
+            "label": "Mental Illness",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                110.4,
+                294.48,
+                119.4,
+                300.48
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "vision",
+            "label": "Vision",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                219.48,
+                294.48,
+                228.48,
+                300.48
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "medical_condition",
+            "label": "Medical Condition",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                305.52,
+                294.48,
+                314.52,
+                300.48
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "other_4",
+            "label": "Other_4",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                413.52,
+                294.48,
+                422.52,
+                300.48
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "fulltime_employee",
+            "label": "Fulltime employee",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                97.92,
+                242.64,
+                106.92,
+                248.64
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "parttime_employee",
+            "label": "Parttime employee",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                220.44,
+                242.64,
+                229.44,
+                248.64
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "selfemployed",
+            "label": "Selfemployed",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                350.04,
+                242.64,
+                359.04,
+                248.64
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "employer",
+            "label": "Employer",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                471.6,
+                242.64,
+                480.6,
+                248.64
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "employed_in_a_family_business",
+            "label": "Employed in a family business",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                97.92,
+                228.36,
+                106.92,
+                234.36
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "unemployed_seeking_work",
+            "label": "Unemployed  seeking work",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                245.4,
+                228.36,
+                254.4,
+                234.36
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "not_employed_not_seeking_employment",
+            "label": "Not employed  not seeking employment",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                378,
+                228.36,
+                387,
+                234.36
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "to_get_a_job",
+            "label": "To get a job",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                105,
+                173.64,
+                114.96,
+                180.24
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "to_start_my_own_business",
+            "label": "To start my own business",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                105,
+                160.68,
+                114.96,
+                167.28
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "to_get_a_better_job_or_promotion",
+            "label": "To get a better job or promotion",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                105,
+                147.72,
+                114.96,
+                154.32
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "to_get_into_another_course_of_study",
+            "label": "To get into another course of study",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                105,
+                134.76,
+                114.96,
+                141.36
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "other_reasons",
+            "label": "Other reasons",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                105,
+                121.8,
+                114.96,
+                128.4
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "to_develop_my_existing_business",
+            "label": "To develop my existing business",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                298.08,
+                173.64,
+                308.04,
+                180.24
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "to_try_for_a_different_career",
+            "label": "To try for a different career",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                298.08,
+                160.68,
+                308.04,
+                167.28
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "it_was_a_requirement_of_my_job",
+            "label": "It was a requirement of my job",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                298.08,
+                147.72,
+                308.04,
+                154.32
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "for_personal_interest_or_selfdevelopment",
+            "label": "For personal interest or selfdevelopment",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                298.08,
+                134.76,
+                308.04,
+                141.36
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "are_you_seeking_recognition_of_prior_learning_rpl_or_course_credit_transfer",
+            "label": "Are you seeking recognition of prior learning RPL or course credit transfer",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                446.28,
+                81.48,
+                456.24,
+                88.08
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "are_you_seeking_recognition_of_prior_learning_rpl_or_course_credit_transfer_2",
+            "label": "Are you seeking recognition of prior learning RPL or course credit transfer",
+            "type": "checkbox",
+            "page": 2,
+            "rect": [
+                515.16,
+                81.48,
+                525.12,
+                88.08
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "if_yes_then_have_you_completed_the_first_6_months_of_your_principal_course",
+            "label": "If Yes then have you completed the first 6 months of your principal course",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                447.48,
+                706.8,
+                457.44,
+                713.4
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "if_yes_then_have_you_completed_the_first_6_months_of_your_principal_course_2",
+            "label": "If Yes then have you completed the first 6 months of your principal course",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                447,
+                693.84,
+                456.96,
+                700.44
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "undefined_3",
+            "label": "undefined_3",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                516.36,
+                706.8,
+                526.32,
+                713.4
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "undefined_3_2",
+            "label": "undefined_3",
+            "type": "checkbox",
+            "page": 3,
+            "rect": [
+                515.88,
+                693.84,
+                525.84,
+                700.44
+            ],
+            "field_type": "/Btn",
+            "field_flags": 49152
+        },
+        {
+            "key": "agent_namebusiness_name",
+            "label": "Agent NameBusiness Name",
+            "type": "textarea",
+            "page": 3,
+            "rect": [
+                72.12,
+                549.96,
+                291.6,
+                578.76
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "as_an_approved_agent_of_bc_i_am_also_certifying_that_i_have_verified_all_the_original_documents_of_the_student",
+            "label": "As an approved agent of BC I am also certifying that I have verified all the original documents of the student",
+            "type": "text",
+            "page": 3,
+            "rect": [
+                293.4,
+                549.96,
+                521.16,
+                564
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "signature",
+            "label": "Signature",
+            "type": "signature",
+            "page": 3,
+            "rect": [
+                339.84,
+                519.159,
+                486,
+                547.239
+            ],
+            "field_type": "/Sig",
+            "field_flags": 0
+        },
+        {
+            "key": "applicant_name",
+            "label": "Applicant Name",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                188.76,
+                348.72,
+                463.56,
+                366.84
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "applicant_signature",
+            "label": "Applicant Signature",
+            "type": "signature",
+            "page": 4,
+            "rect": [
+                189.24,
+                307.32,
+                463.92,
+                325.56
+            ],
+            "field_type": "/Sig",
+            "field_flags": 0
+        },
+        {
+            "key": "passport_biodata_pages",
+            "label": "Passport biodata pages",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                72,
+                240.36,
+                81.96,
+                246.96
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "ielts_or_other_english_language_test_results_if_applicable",
+            "label": "IELTS or other English Language test Results if applicable",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                72,
+                227.4,
+                81.96,
+                234
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "evidence_of_highest_academic_qualifications",
+            "label": "Evidence of highest academic qualifications",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                72,
+                214.44,
+                81.96,
+                221.04
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "copy_of_current_australian_visa_if_applicable",
+            "label": "Copy of current Australian Visa if applicable",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                72,
+                201.48,
+                81.96,
+                208.08
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "oshc_certificate_if_applicable",
+            "label": "OSHC Certificate if applicable",
+            "type": "checkbox",
+            "page": 4,
+            "rect": [
+                72,
+                188.64,
+                81.96,
+                195.24
+            ],
+            "field_type": "/Btn",
+            "field_flags": 0
+        },
+        {
+            "key": "approved_by",
+            "label": "Approved by",
+            "type": "textarea",
+            "page": 4,
+            "rect": [
+                139.2,
+                96.72,
+                211.32,
+                119.04
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "signature_2",
+            "label": "Signature_2",
+            "type": "signature",
+            "page": 4,
+            "rect": [
+                291.48,
+                96.72,
+                380.4,
+                119.04
+            ],
+            "field_type": "/Sig",
+            "field_flags": 0
+        },
+        {
+            "key": "declaration",
+            "label": "declaration",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                78.3596,
+                639.009,
+                185.236,
+                654.698
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "date2_af_date",
+            "label": "Date2_af_date",
+            "type": "textarea",
+            "page": 4,
+            "rect": [
+                95.7145,
+                271.403,
+                168.933,
+                293.403
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "date3_af_date",
+            "label": "Date3_af_date",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                147.397,
+                138.349,
+                259.914,
+                150.357
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        },
+        {
+            "key": "date4_af_date",
+            "label": "Date4_af_date",
+            "type": "text",
+            "page": 4,
+            "rect": [
+                149.927,
+                119.729,
+                262.046,
+                129.767
+            ],
+            "field_type": "/Tx",
+            "field_flags": 0
+        }
+    ]
+}
